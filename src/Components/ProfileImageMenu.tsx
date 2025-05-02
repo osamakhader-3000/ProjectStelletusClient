@@ -3,6 +3,7 @@ import { useAuth } from './AuthContext';
 import { useNavigate } from "react-router";
 import { useState } from 'react';
 import './ProfileImageMenu.css';
+import PopupBackground from './PopupBackground';
 
 export default function ProfileImageMenu(){
     var imageMenuItems = ListProfileImageMenu();
@@ -19,24 +20,31 @@ export default function ProfileImageMenu(){
     }
 
     function toggleList() {
-       setMenuVisible(!menuVisible);     
+       setMenuVisible(!menuVisible);   
+    }
+
+    function backGroundClicked(){
+      setMenuVisible(false);   
     }
 
     return(
+      <>
+     {menuVisible && <PopupBackground onClick={backGroundClicked}></PopupBackground>}
       <div className='profileimagemenu'>
       <button type='button' onClick={toggleList} className='userbuttonclass'>
             <img src="/1547564589747.jfif" className='userimgclass' alt=''></img>
         </button>
      <div className={menuVisible?'profileimagemenu menu':'profileimagemenu menu hide'}>
       {imageMenuItems.map((menuItem)=>( 
-         <a onClick={()=>menuItemClick(menuItem.LinkRef)}>
-          <div>
+         <a key={menuItem.ID.toString()} onClick={()=>menuItemClick(menuItem.LinkRef)}>
+          <div className='profileimagemenu-menu-item'>
             {menuItem.Text}
           </div>
          </a>
        ))}            
     </div>
    </div>
+   </>
     )
 }
 

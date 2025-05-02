@@ -1,19 +1,20 @@
 import React, { useRef } from "react";
 import AuthForm from "./AuthForm";
-import { BasicTextBox } from "project-manager-client-component-library";
+import TextBox, {TextBoxRef} from './GeneralComponents/TextBox';
 import {LoginAccount} from '../../APIsManagers/AuthApiManager'
 import {LoginRequest} from '../../DataTransferObjects/LoginRequest'
+import './LoginForm.css'
 
 const LoginForm: React.FC = () => {
 
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const usernameRef = useRef<TextBoxRef>(null);
+  const passwordRef = useRef<TextBoxRef>(null);
 
   const login = async () => {
    
     const loginRequest = new LoginRequest();
-    loginRequest.Username = usernameRef.current?.value || "";
-    loginRequest.Password = passwordRef.current?.value || "";    
+    loginRequest.Username = usernameRef.current?.getValue() || "";
+    loginRequest.Password = passwordRef.current?.getValue() || "";    
     var redirectUrl = localStorage.getItem("redirect")||"/tasks";       
     localStorage.removeItem("redirect");
     var result = await LoginAccount(loginRequest);
@@ -25,6 +26,7 @@ const LoginForm: React.FC = () => {
     }
   };
 
+
   return (
     <AuthForm
       buttonLabel="Login"
@@ -33,8 +35,8 @@ const LoginForm: React.FC = () => {
       linkText="Create account"
       linkHref="/signup"
     >
-      <BasicTextBox ref={usernameRef} placeholder="Username" divstyle={{ width: "100%" }} divstyleactive={{ width: "100%" }} outerdivstyle={{ justifyContent: "space-evenly", width: "100%" }} />
-      <BasicTextBox ref={passwordRef} placeholder="Password" divstyle={{ width: "100%" }} divstyleactive={{ width: "100%" }} outerdivstyle={{ justifyContent: "space-evenly", width: "100%" }} />
+      <TextBox ref={usernameRef} placeholder="Username" textInputStyle={'inputTextbox'} innerDivStyle={'divTextbox fullWidth'} innerDivStyleActive={'divTextboxActive fullWidth'} outerDivStyle={'outerDivTextbox textboxOuterDivStyle'} />
+      <TextBox ref={passwordRef} placeholder="Password" textInputStyle={'inputTextbox'} textInputType="password" innerDivStyle={'divTextbox fullWidth'} innerDivStyleActive={'divTextboxActive fullWidth'} outerDivStyle={'outerDivTextbox textboxOuterDivStyle'} />
     </AuthForm>
   );
 };

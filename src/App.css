@@ -716,3 +716,24 @@
 .hide{
   display: none;
 }
+
+
+.buttonBasicButton {
+  background-color: "#e0e5f2";
+  border: "0";
+  border-radius: "13px";
+  color: "#2b3674";
+  cursor: "pointer";
+  font-size: "large";
+  font-weight: 700;
+  height: "44px";
+  margin: "0 4px";
+  object-fit: "cover";
+  overflow: "hidden";
+  width: "150px";
+}
+
+
+.fullWidth {
+  width: 100%;
+}

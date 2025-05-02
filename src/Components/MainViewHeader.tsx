@@ -1,12 +1,13 @@
-import { BasicTextBox } from "project-manager-client-component-library";
+import  TextBox  from "./GeneralComponents/TextBox";
 import ProfileImageMenu from './ProfileImageMenu';
 
 export default function MainViewHeader(){
    
+
     return (
     <div className='mainviewheader'>
       <div className="mainviewheader searchDiv">
-        <BasicTextBox placeholder='Search'></BasicTextBox>
+        <TextBox placeholder='Search'></TextBox>
       </div>
       <ProfileImageMenu></ProfileImageMenu>
     </div>);
