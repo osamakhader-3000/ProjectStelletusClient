@@ -1,0 +1,22 @@
+{
+    "security-app-domain":"http://localhost:82",
+    "create-user-api":"api/user/create",
+    "microsoft-login":"api/auth/microsoft-login",
+    "create-account":"api/auth/createaccount",
+    "login":"api/auth/login",
+    "tasksdomain":"http://localhost/",
+    "list-tasks":"api/tasks/list",
+    "task-create":"api/tasks/create",
+    "task-delete":"api/tasks/delete",
+    "task-get":"api/tasks/get",
+    "realms-domain":"http://localhost:85",
+    "realms-list":"api/Ticket/Realms/List",
+    "status-domain":"http://localhost:85",
+    "users-domain":"http://localhost:85",
+    "users-list":"api/Ticket/Actors/List",
+    "check-loggin":"api/auth/checklogin",
+    "logout":"api/auth/logout",
+    "secure-user":"api/auth/secure",
+    "status-list":"",
+    "user-get":""
+}
