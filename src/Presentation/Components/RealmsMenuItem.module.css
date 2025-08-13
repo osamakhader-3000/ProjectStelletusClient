@@ -1,3 +1,13 @@
+:root {
+  /* Default theme (e.g., light theme) */
+  --background-color: #cff;
+}
+
+[data-theme="dark"] {
+  /* Dark theme */
+  --background-color: #1a1a1a;
+}
+
 .realmsmenuelement{
     font: inherit;
     color: rgb(67, 24, 255);
@@ -11,7 +21,7 @@
 }
 
 .realmsmenuelement:hover{
-    background-color: #00ffff;
+    background-color: var(--background-color);
     cursor: pointer;
   }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect,useContext } from 'react';
+import { useState, useEffect } from 'react';
 import StatusesPage from '../../Components/StatusPage.tsx'
 import { Routes, Route } from 'react-router';
 import RealmsMenu from '../../Components/RealmsMenu.tsx'
@@ -7,17 +7,19 @@ import MainViewHeader from '../../Components/MainViewHeader.tsx';
 import TaskFormWrapper from '../../Components/TaskFromWrapper.tsx';
 import Realm from '../../../Domain/Entities/Realm.ts';
 import styles from './MainPage.module.css'
-import { DependencyContext } from '../../../context/DependencyContext.tsx';
+import { useListRealmsByName } from '../../Hooks/useListRealmsByName.tsx';
 
  function MainPage() {
-  const {realmService} = useContext(DependencyContext);
   const [realms, setRealms] = useState<Realm[]>([]);
+  const listRealms = useListRealmsByName();
   
   useEffect(() => {
     const fetchData = async () => {
     
-      var _realms = await realmService.listRealmsByName('');
+      
+      const { realms: _realms, errorMessage: _err } = await listRealms('');
       setRealms(_realms);
+      
     }
   
     fetchData();  

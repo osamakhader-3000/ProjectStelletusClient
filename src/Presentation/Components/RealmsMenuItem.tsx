@@ -9,7 +9,7 @@ interface RealmsMenuItemProps{
 export default function RealmsMenuItem({ID,Name}:RealmsMenuItemProps){
 
 return(
-<div className={styles.realmsmenuelement}>
+<div>
     <Link to={'/realm/'+ID}  className={styles.realmsmenurelmlink}>
             <div>
                 <div className={styles.realmsmenurealmimg}>

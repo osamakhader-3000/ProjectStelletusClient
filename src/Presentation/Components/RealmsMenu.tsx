@@ -1,29 +1,35 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import RealmsMenuItem from './RealmsMenuItem';
-import TextBox  from './GeneralComponents/TextBox';
+import SearchBox  from './GeneralComponents/SearchBox';
 import Realm from '../../Domain/Entities/Realm';
 import styles from './RealmsMenu.module.css'
-import { DependencyContext } from '../../context/DependencyContext';
+import { useListRealmsByName } from '../Hooks/useListRealmsByName';
+import { ErrorMessageBox } from './GeneralComponents/ErrorMessageBox';
 
 export default function RealmsMenu() {
 
-const { realmService } = useContext(DependencyContext);
-
+  const listRealms = useListRealmsByName();
   const [_realmname, setRealmName] = useState('');
   const [realms, setData] = useState<Realm[]>([]); 
+  const [err,setErr] = useState<string|undefined>(undefined);
+  const [showError,setShowError] = useState<boolean>(false);
+  
   useEffect(() => {
     const fetchData = async () => {
-      const _realms = await realmService.listRealmsByName(_realmname);
+      const { realms: _realms, errorMessage: _err,showError } = await listRealms(_realmname);
       setData(_realms);
+      setErr(_err);
+      setShowError(showError);
     };
 
     fetchData();
   }, [_realmname]);
 
   function RealmSearch(event: React.KeyboardEvent<HTMLInputElement>) {
-    setRealmName((event.target as HTMLInputElement).value);
+    setRealmName((event.target as HTMLInputElement).value);    
   }
 
+  
   return (
     <div>
       <div className={styles.homebutton}>        
@@ -32,7 +38,7 @@ const { realmService } = useContext(DependencyContext);
         </a>
       </div>
       <div className={styles.realmsmenusearch}>
-        <TextBox placeholder="Search" keyUpFunc={RealmSearch} />
+        <SearchBox placeholder="Search projects" keyUpFunc={RealmSearch} />
       </div>
       <div className={styles.realmsmenucontainer}>
         <table className={styles.realmsmenutable}>
@@ -43,17 +49,22 @@ const { realmService } = useContext(DependencyContext);
                 <RealmsMenuItem ID="mytasks" Name="mytasks" />
               </td>
             </tr>
+            <tr>
+              <td>
+              </td>
+              </tr>
             {realms.length > 0 &&
               realms.map((realm: Realm) => (
                 <tr key={realm.id} className={styles.realmsmenuelement}>
                   <td>
-                    <RealmsMenuItem ID={realm.id.toString()} Name={realm.name} />
-                  </td>
+                    <RealmsMenuItem ID={realm.id.toString()} Name={realm.name}/>
+                    </td>
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
+      <ErrorMessageBox message={err} showError={showError} setShowError={setShowError}></ErrorMessageBox>
     </div>
   );
 }

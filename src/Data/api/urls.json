@@ -4,7 +4,7 @@
     "microsoft-login":"api/auth/microsoft-login",
     "create-account":"api/auth/createaccount",
     "login":"api/auth/login",
-    "tasksdomain":"http://localhost/",
+    "tasksdomain":"http://localhost",
     "list-tasks":"api/tasks/list",
     "task-create":"api/tasks/create",
     "task-delete":"api/tasks/delete",

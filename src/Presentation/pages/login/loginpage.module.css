@@ -1,3 +1,15 @@
+  :root {
+  /* Default theme (e.g., light theme) */
+  --background-color: #cff;
+}
+
+[data-theme="dark"] {
+  /* Dark theme */
+  --background-color: #1a1a1a; 
+}
+  
+  
+  
   .socialbtn {
     position: relative;
     width: 320px;
@@ -46,7 +58,7 @@
 }
 
 .loginroot {
-    background-color: #cff;
+    background-color: var(--background-color);
   }
 
   .container {
@@ -69,6 +81,8 @@
     background-image: url(./public/logo.jpg);
     background-position-x: center;
     background-position-y: bottom;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
   }
   
   .logodiv h3 {

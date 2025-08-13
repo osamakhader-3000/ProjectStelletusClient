@@ -9,7 +9,7 @@ export class TaskApi implements ITaskApi{
 
     constructor(){
         this.baseUrl = urls['tasksdomain'];
-        this.token = localStorage.getItem("jwt")??'';
+        this.token = localStorage.getItem("token")??'';
     }
 
     async ListTasks(): Promise<Task[]> {

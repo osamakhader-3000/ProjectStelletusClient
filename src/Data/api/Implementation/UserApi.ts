@@ -10,7 +10,7 @@ export class UserApi implements IUserApi{
 
     constructor(){
         this.baseUrl = urls['tasksdomain'];
-        this.token = localStorage.getItem("jwt")??'';
+        this.token = localStorage.getItem("token")??'';
     }
 
     async ListUsers(): Promise<User[]> {

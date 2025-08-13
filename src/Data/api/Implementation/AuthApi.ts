@@ -3,7 +3,7 @@ import {User} from '../../../Domain/Entities/User'
 import {LoginRequest} from '../../DataTransferObjects/LoginRequest'
 import { IAuthApi } from '../Interfaces/IAuthApi'
 import urls from '../urls.json'
-
+import GeneralApiResult from '../../../Application/DataTransferObjects/GeneralApiResult'
 
 export class AuthApi implements IAuthApi{
     
@@ -12,7 +12,7 @@ export class AuthApi implements IAuthApi{
 
     constructor(){
         this.baseUrl =  urls["security-app-domain"];
-        this.token = localStorage.getItem("jwt")??'';
+        this.token = localStorage.getItem("token")??'';
     }
 
     async CreateAccount(user: User): Promise<void> {
@@ -25,21 +25,23 @@ export class AuthApi implements IAuthApi{
         );
     }
 
-    async LoginAccount(loginRequest: LoginRequest): Promise<void> {
-        let url = urls['login'];
-        await axios.post(`${this.baseUrl}/${url}`
-            ,loginRequest
-            ,{
-                headers:{Authorization: `Bearer ${this.token}`}
-            }
-        );
-
-       
-
+    async LoginAccount(loginRequest: LoginRequest): Promise<GeneralApiResult> {
+        let token = '';
+            let url = urls['login'];
+            return await axios.post(`${this.baseUrl}/${url}`
+                ,loginRequest
+            )
+            .then(function (response) {
+                token = response.data.token;
+                return new GeneralApiResult(false,'',token)
+            })
+            .catch(function (error) {
+              return new GeneralApiResult(true,error.message,null); 
+            });
     }
 
     async CheckLoggedIn(): Promise<boolean> {
-        let url = urls['logout'];
+        let url = urls['check-loggin'];
         let response = await axios.get(`${this.baseUrl}/${url}`
             ,{
                 headers:{Authorization: `Bearer ${this.token}`}

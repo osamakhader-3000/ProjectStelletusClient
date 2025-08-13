@@ -1,6 +1,7 @@
 import { User } from "../../Domain/Entities/User";
 import { IAuthService } from "../Services/IAuthService";
-import { IAuthRepository } from "../../Domain/Repositories/IAuthRepository";
+import { IAuthRepository } from "../Repositories/IAuthRepository";
+import GeneralApiResult from "../DataTransferObjects/GeneralApiResult";
 
 export class AuthService implements IAuthService{
 
@@ -22,11 +23,12 @@ export class AuthService implements IAuthService{
         this.authRepository.CreateAccount(user);
     }
 
-    async LoginAccount(name:string,password:string): Promise<void> {
+    async LoginAccount(name:string,password:string): Promise<GeneralApiResult> {
         let user = new User();
         user.Name = name;
         user.Password = password;
-        this.authRepository.LoginAccount(user);
+        var result = await this.authRepository.LoginAccount(user);
+        return result;
     }
 
 
