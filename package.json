@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "project-manager-client-component-library": "file:../project-manager-client-component-library/project-manager-client-component-library-1.0.0.tgz"
+  }
+}
