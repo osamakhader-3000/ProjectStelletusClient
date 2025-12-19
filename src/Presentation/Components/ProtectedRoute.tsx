@@ -6,16 +6,15 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
     const {authService} = useContext(DependencyContext);
+    const {navigationService} = useContext(DependencyContext);
     
     useEffect(() => {
       const checkAuth = async () => {
         try {
-          
+          debugger
           const loggedIn = await authService.CheckLoggedIn();
           setIsLoggedIn(loggedIn);
-          if (location.pathname !== '/login' && location.pathname !== '/auth/callback') {          
-            localStorage.setItem("redirect", location.pathname + location.search);
-          }
+          navigationService.SetRedirectUrl(location.pathname + location.search);
         } catch (error) {
           console.error('Error checking login status:', error);
           setIsLoggedIn(false); // Default to false on error

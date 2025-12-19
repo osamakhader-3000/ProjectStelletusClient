@@ -22,6 +22,9 @@ import { IRealmService } from '../Application/Services/IRealmService';
 import { INavigationService } from '../Application/Services/INavigationService';
 import { NavigationService } from '../Application/UseCases/NavigationService';
 import { NavigationStorage } from '../Data/LocalData/Implemetation/NavigationStorage';
+import { NavigationRepository } from '../Data/Repositories/NavigationRepository';
+import { IAuthStorage } from '../Data/LocalData/Interfaces/IAuthStorage';
+
 
 const realmapi = new RealmApi();
 const realmRepo = new RealmRepository(realmapi);
@@ -39,7 +42,10 @@ const authStorage = new AuthStorage();
 const authRepository = new AuthRepository(authApi,authStorage);
 const authServ = new AuthService(authRepository);
 const navigateStore = new NavigationStorage();
-const navigateServ = new NavigationService(navigateStore);
+const navigateRepo = new NavigationRepository(navigateStore);
+const navigateServ = new NavigationService(navigateRepo);
+
+
 
 
 // Define the context interface
@@ -50,6 +56,7 @@ interface DependencyContextType {
   statusService: IStatusService;
   authService: IAuthService;
   navigationService:INavigationService;
+  authStorage:IAuthStorage;
 }
 
 export const DependencyContext = createContext<DependencyContextType>({
@@ -58,11 +65,12 @@ export const DependencyContext = createContext<DependencyContextType>({
   taskService:taskServ,
   statusService:statusServ,
   authService:authServ,
-  navigationService:navigateServ
+  navigationService:navigateServ,
+  authStorage:authStorage
 });
 
 export const DependencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,statusService:statusServ ,authService:authServ,navigationService:navigateServ}}>
+  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,statusService:statusServ ,authService:authServ,navigationService:navigateServ,authStorage:authStorage}}>
     {children}
   </DependencyContext.Provider>
 );

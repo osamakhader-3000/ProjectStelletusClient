@@ -5,11 +5,14 @@ import styles from './LoginForm.module.css'
 import { DependencyContext } from '../../context/DependencyContext';
 import { ErrorMessageBox } from './GeneralComponents/ErrorMessageBox';
 import {FormTextBox} from './GeneralComponents/FormTextBox'
+import {TestTextBox} from './GeneralComponents/TestTextBox' 
 import { BasicButtonButton } from "project-manager-client-component-library";
 import { ValidationMessage } from "./GeneralComponents/ValidationMessage";
+import { useNavigate } from "react-router";
 
 const LoginForm: React.FC = () => {
 
+  const navigate = useNavigate();
   const {authService,navigationService} = useContext(DependencyContext);
   const [err,setErr] = useState<string|undefined>(undefined);
   const [showError,setShowError] = useState(false);
@@ -24,6 +27,11 @@ const LoginForm: React.FC = () => {
 
   const usernameChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
+    setInvalidUsername(false);
+  }
+
+  const validateUsername = (username:string) : boolean => { 
+    return username.length > 0;
   }
 
   const usernameUnclick = () => {
@@ -50,6 +58,8 @@ const LoginForm: React.FC = () => {
     setUsernameShowValidationMessage(false);
     setPasswordShowValidationMessage(false);
 
+    setShowError(false);
+
     var valid = true;
 
     
@@ -57,8 +67,8 @@ const LoginForm: React.FC = () => {
     {
       setInvalidUsername(true);
       if(valid){
-        valid = false;
-        setUsernameShowValidationMessage(true);
+        setErr("Please insert your username");
+        setShowError(true);
       }
     }
 
@@ -67,20 +77,23 @@ const LoginForm: React.FC = () => {
       setInvalidPassword(true);
       if(valid){
         valid = false;
-        setPasswordShowValidationMessage(true);
+        setErr("Please insert your password");
+        setShowError(true);
       }
     }
 
     if(!valid)return;
 
     var redirectUrl = navigationService.GetRedirectUrl()||"/tasks";       
+    
     navigationService.SetRedirectUrl(redirectUrl);
-    var result=  await authService.LoginAccount(username,password); 
-    if(!result.HasError)           
-      window.location.replace(redirectUrl);    
+    var result = await authService.LoginAccount(username,password); 
+    
+    if(!result.hasError)           
+      navigate(redirectUrl);    
     else{
-      setErr(result.Error);
-      setShowError(result.HasError);
+      setErr(result.message);
+      setShowError(result.hasError);
     }
 
   };
@@ -97,6 +110,9 @@ const LoginForm: React.FC = () => {
           <FormTextBox textInputType="password" showValidationMessage={passwordShowValidationMessage} isValid={!invalidPassword} value={password} onBlur={passwordUnclick} onChange={passwordChanged} placeholder="Password" innerDivStyle={`${textBoxStyles.divTextbox} fullWidth`} innerDivStyleActive={`${textBoxStyles.divTextboxActive} fullWidth`} outerDivStyle={`${textBoxStyles.outerDivTextbox} ${styles.textboxOuterDivStyle}`} >
             <ValidationMessage>Please insert your password</ValidationMessage>
           </FormTextBox>
+         <TestTextBox placeholder="do you have a name?" value={username} onChange={usernameChanged} isValid={!invalidUsername}  >
+
+         </TestTextBox>
           <BasicButtonButton label="Login" onClick={login} inputButtonStyle={styles.ButtonStyle} />
           <ErrorMessageBox message={err} showError={showError} setShowError={setShowError}></ErrorMessageBox>
         </div>            

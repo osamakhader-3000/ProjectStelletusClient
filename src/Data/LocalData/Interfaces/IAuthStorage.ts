@@ -1,4 +1,4 @@
 export interface IAuthStorage{
-    SetToken(Token: string): void;
-    GetToken():string|null;    
+    SetLoginExpireTime(expireTime: Date): void;
+    GetLoginExpireTime(): Date | null;
 }

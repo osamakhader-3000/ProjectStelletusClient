@@ -3,7 +3,7 @@ import {User} from '../../../Domain/Entities/User'
 import {LoginRequest} from '../../DataTransferObjects/LoginRequest'
 import { IAuthApi } from '../Interfaces/IAuthApi'
 import urls from '../urls.json'
-import GeneralApiResult from '../../../Application/DataTransferObjects/GeneralApiResult'
+import { GeneralApiResult } from '../../DataTransferObjects/GeneralApiResult';
 
 export class AuthApi implements IAuthApi{
     
@@ -11,7 +11,7 @@ export class AuthApi implements IAuthApi{
     private token:string;
 
     constructor(){
-        this.baseUrl =  urls["security-app-domain"];
+        this.baseUrl =  urls['security-app-domain'];
         this.token = localStorage.getItem("token")??'';
     }
 
@@ -25,27 +25,30 @@ export class AuthApi implements IAuthApi{
         );
     }
 
-    async LoginAccount(loginRequest: LoginRequest): Promise<GeneralApiResult> {
-        let token = '';
-            let url = urls['login'];
-            return await axios.post(`${this.baseUrl}/${url}`
-                ,loginRequest
-            )
-            .then(function (response) {
-                token = response.data.token;
-                return new GeneralApiResult(false,'',token)
-            })
-            .catch(function (error) {
-              return new GeneralApiResult(true,error.message,null); 
-            });
+   async LoginAccount(loginRequest: LoginRequest): Promise<GeneralApiResult<string>> {    
+    const url = urls['login'];
+        try {
+            const response = await axios.post(`${this.baseUrl}/${url}`, loginRequest);
+
+            return new GeneralApiResult<string>(
+                response.data.resultCode,
+                response.data.resultMessage,
+                response.data.data
+            );
+        } catch (error: any) {
+            return new GeneralApiResult<string>(
+                error.response?.status ?? -1,
+                error.message ?? "Unknown error",
+                null
+            );
+        }
     }
+
 
     async CheckLoggedIn(): Promise<boolean> {
         let url = urls['check-loggin'];
         let response = await axios.get(`${this.baseUrl}/${url}`
-            ,{
-                headers:{Authorization: `Bearer ${this.token}`}
-            }
+            ,{ withCredentials: true }
         );
          if(response.data)
             return true;
@@ -56,9 +59,7 @@ export class AuthApi implements IAuthApi{
     async Logout(): Promise<void> {
         let url = urls['logout'];
         await axios.get(`${this.baseUrl}/${url}`
-            ,{
-                headers:{Authorization: `Bearer ${this.token}`}
-            }
+            ,{ withCredentials: true }
         );
     }
 
@@ -71,13 +72,29 @@ export class AuthApi implements IAuthApi{
             }
         );
 
-         return response.data.map((u:User)=>({
-                    ID:u.ID,
-                    Name:u.Name,
-                    Password:u.Password,
-                    Email:u.Email
-                }));
+         return response.data.map((u:User)=>({ID:u.ID,Name:u.Name,Password:u.Password,Email:u.Email}));
     }
+ 
 
+    async Refresh(): Promise<GeneralApiResult<string>> {
+    const url = urls["refresh-token"];
 
+    try {
+        const response = await axios.get(`${this.baseUrl}/${url}`, {
+            withCredentials: true,
+        });
+
+        return new GeneralApiResult<string>(
+            response.data.resultCode,
+            response.data.resultMessage,
+            response.data.data
+        );
+    } catch (err: any) {
+        const status = err?.response?.status ?? -1;
+        const message = err?.message ?? "Unknown error";
+        return new GeneralApiResult<string>(status, message, null);
+    }
+    }
 }
+
+

@@ -1,24 +1,32 @@
 import { INavigationService } from "../Services/INavigationService";
-import { INavigationStorage } from "../../Data/LocalData/Interfaces/INavigationStorage";
+import { INavigationRepository } from "../Repositories/INavigationRepository";
 
 export class NavigationService implements INavigationService{
 
-    navigationStorage:INavigationStorage;
+    navigationRepository:INavigationRepository;
 
-    constructor(navigationStorage:INavigationStorage){
-        this.navigationStorage = navigationStorage;
+    constructor(navigationRepository:INavigationRepository){
+        this.navigationRepository = navigationRepository;
     }
 
     GetRedirectUrl(): string {
-       return this.navigationStorage.GetRedirect();
+       return this.navigationRepository.GetRedirect();
     }
 
     SetRedirectUrl(url: string): void {
-        this.navigationStorage.SetRedirect(url);
+        this.navigationRepository.SetRedirect(url);
     }
 
     DeleteRedirectUrl(): void {
-        this.navigationStorage.DeleteRedirect();
+        this.navigationRepository.DeleteRedirect();
+    }
+
+    NavigateTo(url: string): void {
+        window.location.href = url;
+    }
+
+    NavigateToMicrosoftLogin(): void {
+        this.NavigateTo(this.navigationRepository.GetMicrosoftLoginUrl());
     }
 
 }

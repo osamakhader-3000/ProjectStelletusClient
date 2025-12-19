@@ -2,15 +2,27 @@ import { INavigationStorage } from "../Interfaces/INavigationStorage";
 
 export class NavigationStorage implements INavigationStorage{
     GetRedirect(): string {
-        return localStorage.getItem('redirect')??'';
+        return NavigateStore.redirectTo as string;
     }
     
     SetRedirect(url: string): void {
-        localStorage.setItem('redirect',url);
+        NavigateStore.redirectTo = url;
     }
 
     DeleteRedirect(): void {
-        localStorage.removeItem('redirect');
-    }
+        NavigateStore.redirectTo = null
+    }    
 
 }
+
+
+
+const NavigateStore = {
+  redirectTo: null,
+  userPreferences: null,
+  pendingInvitationId: null,
+} as {
+  redirectTo: string | null;
+  userPreferences: any;
+  pendingInvitationId: string | null;
+};

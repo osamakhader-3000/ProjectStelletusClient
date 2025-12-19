@@ -1,14 +1,25 @@
 import { IAuthStorage } from "../Interfaces/IAuthStorage";
 
 export class AuthStorage implements IAuthStorage{
-    GetToken(): string | null {
-        if(localStorage.getItem('token')!=null)
-            return localStorage.getItem('token');
-        return null;
+   
+    GetLoginExpireTime(): Date | null { 
+        const storedValue = AuthStore.loginExpireTime;
+        if (!storedValue) return null;
+
+        return storedValue;
     }
 
-    SetToken(token: string): void {
-        localStorage.setItem('token',token);
+    SetLoginExpireTime(expireTime: Date): void {
+        AuthStore.loginExpireTime = expireTime;
     }
 
 }
+
+
+const AuthStore = {
+  loginExpireTime: null
+} as {
+  loginExpireTime: Date | null;
+ 
+};
+

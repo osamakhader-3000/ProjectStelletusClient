@@ -4,6 +4,9 @@ import microsoftLogo from '../../../../public/32px-Microsoft_logo.svg.png';
 import googleLogo from '../../../../public/Googlelogo.svg.webp'
 import styles from './loginpage.module.css'
 import { useTranslations } from '../../Hooks/useTranslations.tsx';
+import { DependencyContext } from '../../../context/DependencyContext.tsx';
+import { useContext } from 'react';
+
 interface LoginPageProps {
   newAccount: boolean; // While you defined this, we'll control the state internally based on the route
 }
@@ -12,9 +15,10 @@ export default function LoginPage({newAccount}:LoginPageProps) {
 
   const { T } = useTranslations();
 
-  function microsoftlogin() {
-    window.location.href = 'https://localhost:7176/api/auth/reafmi';
+  const { navigationService } = useContext(DependencyContext);
 
+  function microsoftlogin() {
+    navigationService.NavigateToMicrosoftLogin();
   }
 
 

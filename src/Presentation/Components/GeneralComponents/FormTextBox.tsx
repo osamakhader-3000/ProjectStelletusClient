@@ -39,9 +39,7 @@ export function FormTextBox
   isValid = true,
   showValidationMessage = false,
   children,
-  onBlur,
-  clearable = false,
-  onClear
+  onBlur
 }:FormTextBoxProps){
 
   const [isActive, setIsActive] = useState(false);
@@ -101,7 +99,6 @@ const handleKeyUp= (event: React.KeyboardEvent<HTMLInputElement>) => {
           ref={localRef}
           onBlur={onBlur}          
         />
-        <path xmlns="http://www.w3.org/2000/svg" d="M16 8L8 16" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       </div>   
     </div>      
       {(!isValid && showValidationMessage) ? (
