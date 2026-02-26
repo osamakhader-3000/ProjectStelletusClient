@@ -22,13 +22,7 @@ export default function TaskForm({ taskid }:TaskFormProps)
         title: "",
         description: ""
       });
-/*
-      const isNewTask=()=>{
-          if (taskid !== null && taskid.length >0 && taskid !== '00000000-0000-0000-0000-000000000000')
-            return false;
-          return true; 
-      };
-*/
+
       useEffect(() => {
         const fetchTask = async () => {
           const isNewTask = taskid === null || taskid.length === 0 || taskid === '00000000-0000-0000-0000-000000000000';

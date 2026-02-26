@@ -3,23 +3,21 @@ import { IAuthStorage } from "../Interfaces/IAuthStorage";
 export class AuthStorage implements IAuthStorage{
    
     GetLoginExpireTime(): Date | null { 
-        const storedValue = AuthStore.loginExpireTime;
+      
+      //get expire time from local storage
+      const storedValue = sessionStorage.getItem('loginExpireTime');
+
         if (!storedValue) return null;
 
-        return storedValue;
+        return new Date(storedValue);
     }
 
     SetLoginExpireTime(expireTime: Date): void {
-        AuthStore.loginExpireTime = expireTime;
+        sessionStorage.setItem('loginExpireTime', expireTime.toString());
+    }
+
+    RemoveLoginExpireTime(): void {
+        sessionStorage.removeItem('loginExpireTime');
     }
 
 }
-
-
-const AuthStore = {
-  loginExpireTime: null
-} as {
-  loginExpireTime: Date | null;
- 
-};
-

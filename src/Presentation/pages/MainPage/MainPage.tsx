@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import StatusesPage from '../../Components/StatusPage.tsx'
-import { Routes, Route } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router';
 import RealmsMenu from '../../Components/RealmsMenu.tsx'
 import TasksPage from '../../Components/TasksPage.tsx';
 import MainViewHeader from '../../Components/MainViewHeader.tsx';
@@ -8,6 +8,7 @@ import TaskFormWrapper from '../../Components/TaskFromWrapper.tsx';
 import Realm from '../../../Domain/Entities/Realm.ts';
 import styles from './MainPage.module.css'
 import { useListRealmsByName } from '../../Hooks/useListRealmsByName.tsx';
+import TestSecurity from '../../Components/TestSecurity.tsx';
 
  function MainPage() {
   const [realms, setRealms] = useState<Realm[]>([]);
@@ -50,12 +51,14 @@ import { useListRealmsByName } from '../../Hooks/useListRealmsByName.tsx';
               <tr>
                 <td>
           <Routes>
-            <Route path="/realm/mytasks" element={<TasksPage/>} />
+            <Route path="/" element={<Navigate to="/mytasks" replace />} />
+            <Route path="/mytasks" element={<TasksPage/>} />
+            <Route path="/test" element={<TestSecurity />} />
             {realms.map((realm, index) => (
               
-                <Route key={index} path={'realm/'+realm.id} element={<StatusesPage realmid={realm.id}/>} />
+                <Route key={index} path={'/'+realm.id} element={<StatusesPage realmid={realm.id}/>} />
               ))}
-              <Route path="/realm/task/:taskid" element={<TaskFormWrapper />} />
+              <Route path="/task/:taskid" element={<TaskFormWrapper />} />
               
        </Routes>        
        </td>

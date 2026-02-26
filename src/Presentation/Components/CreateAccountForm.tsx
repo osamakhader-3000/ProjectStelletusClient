@@ -1,13 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext,useEffect, useRef } from "react";
 import AuthForm from "./AuthForm";
-import {FormTextBox} from './GeneralComponents/FormTextBox'
+import {TextBox} from './GeneralComponents/TextBox' 
 import styles from './CreateAccountForm.module.css'
 import { DependencyContext } from '../../context/DependencyContext';
-import formTextBoxStyle from './GeneralComponents/FormTextBox.module.css';
 import { BasicButtonButton } from "project-manager-client-component-library";
-import { ValidationMessage } from "./GeneralComponents/ValidationMessage";
+import { ErrorMessageBox } from './GeneralComponents/ErrorMessageBox';
+import { User } from "../../Domain/Entities/User";
+import { useNavigate } from "react-router";
 
-const CreateAccountForm: React.FC = () => {
+interface CreateAccountFormProps {
+  redirectUrl: string;
+}
+
+const CreateAccountForm: React.FC<CreateAccountFormProps> = ({ redirectUrl }) => {
 
   const [invalidEmail, setInvalidEmail] = React.useState(false);
   const [invalidUsername, setInvalidUsername] = React.useState(false);
@@ -17,10 +22,13 @@ const CreateAccountForm: React.FC = () => {
   const [password, setPassword] = React.useState('');
   const [email, setEmail] = React.useState('');
 
-  const [usernameShowValidationMessage, setUsernameShowValidationMessage] = React.useState(false);
-  const [emailShowValidationMessage, setEmailShowValidationMessage] = React.useState(false);
-  const [passwordShowValidationMessage, setPasswordShowValidationMessage] = React.useState(false);
+  const [showError,setShowError] = React.useState(false);
 
+  const errorBoxWrapperRef = useRef<HTMLDivElement>(null);
+  const {authService} = useContext(DependencyContext);
+  const [err,setErr] = React.useState<string|undefined>(undefined);
+
+ const navigate = useNavigate();
 
   const usernameChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -28,7 +36,6 @@ const CreateAccountForm: React.FC = () => {
 
   const usernameUnclick = () => {
     setInvalidUsername(false);
-    setUsernameShowValidationMessage(false);
   }
 
   const emailChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +44,6 @@ const CreateAccountForm: React.FC = () => {
 
   const emailUnclick = () => {
     setInvalidEmail(false);
-    setEmailShowValidationMessage(false);
   }
 
   const passwordChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,81 +52,91 @@ const CreateAccountForm: React.FC = () => {
 
   const passwordUnclick = () => {
     setInvalidPassword(false);
-    setPasswordShowValidationMessage(false);
   }
 
 
-  const createAccount = () => {
+  const createAccount = async () => {
 
+    
     setInvalidUsername(false);
     setInvalidPassword(false);
     setInvalidEmail(false);
-
-    setUsernameShowValidationMessage(false);
-    setEmailShowValidationMessage(false);
-    setPasswordShowValidationMessage(false);
-
-
-    let valid = true;
+    
     if (username.length === 0 || username.length < 5 || username.length > 50) {
-        setInvalidUsername(true);
-        if(valid){
-          valid = false;
-          setUsernameShowValidationMessage(true);           
-        }
+        setInvalidUsername(true);        
+        setShowError(true);
+        return;
     }
     
 
     if(email.length ===0 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setInvalidEmail(true);
-      if(valid){
-        valid = false;
-        setEmailShowValidationMessage(true);
-      }
+      setShowError(true);
+      return;
     }
 
     if (password.length === 0 || password.length < 8 || password.length > 50) {
       setInvalidPassword(true);
-      if(valid){
-        valid = false;
-        setPasswordShowValidationMessage(true);
-      }
+      setShowError(true);
+      return;      
+    } 
+
+    let user = new User(null, username, email, password);
+
+    var success = await authService.CreateAccount(user);
+
+debugger;
+
+    if(success){
+        navigate(redirectUrl, { replace: true });
     }
-
-
-    if (!valid) return;
-
-    
-
-    const {authService} = useContext(DependencyContext);
-    authService.CreateAccount( username, password, email);
-
+   
   };
 
+
+  useEffect(() => {
+      if (!showError) return;
+  
+      const onPointerDown = (e:Event) => {
+        const target = e.target as Node;
+  
+        if (errorBoxWrapperRef.current?.contains(target)) return;
+  
+        setShowError(false);
+      };
+  
+      document.addEventListener("click", onPointerDown, true);
+      return () => document.removeEventListener("click", onPointerDown, true);
+    }, [showError]);
 
   return (
     <AuthForm buttonLabel="Create Account" onSubmit={createAccount} linkPrompt="Already have an account?" linkText="Log in" linkHref="/login">
       <div className={styles.container}>
         <div className={styles.thirdOfWidth}></div>
       <div className={`${styles.loginformdiv} ${styles.thirdOfWidth}`}>
-        <FormTextBox onChange={usernameChanged} onBlur={usernameUnclick} value={username} isValid={!invalidUsername} showValidationMessage={usernameShowValidationMessage} placeholder="Username" innerDivStyle={`${formTextBoxStyle.innerDivStyle} fullWidth `} innerDivStyleActive={`${formTextBoxStyle.innerDivStyleActive} fullWidth`} outerDivStyle={`${formTextBoxStyle.outerDivStyle} ${styles.textboxOuterDivStyle}`} >
-            <ValidationMessage> Please insert a valid username.</ValidationMessage>
-            <ValidationMessage>A valid Username must be between 5 and 50 characters</ValidationMessage>          
-        </FormTextBox>
-        <FormTextBox onChange={emailChanged} onBlur={emailUnclick} value={email} isValid={!invalidEmail}  showValidationMessage={emailShowValidationMessage} placeholder="Email" innerDivStyle={`${formTextBoxStyle.innerDivStyle} fullWidth`} innerDivStyleActive={`${formTextBoxStyle.innerDivStyleActive} fullWidth`} outerDivStyle={`${formTextBoxStyle.outerDivStyle} ${styles.textboxOuterDivStyle}`} >
-          <ValidationMessage>
-            <div>Please insert a valid email address.</div>
-            <div>A valid email address must be in the format <em>someone@provider.com</em></div>
-          </ValidationMessage>
-        </FormTextBox>
-        <FormTextBox onChange={passwordChanged} onBlur={passwordUnclick} value={password} isValid={!invalidPassword} showValidationMessage={passwordShowValidationMessage} placeholder="Password" textInputType="password" innerDivStyle={`${formTextBoxStyle.innerDivStyle} fullWidth `} innerDivStyleActive={`${formTextBoxStyle.innerDivStyleActive} fullWidth`} outerDivStyle={`${formTextBoxStyle.outerDivStyle} ${styles.textboxOuterDivStyle}`}>
-          <ValidationMessage> 
-            <p>Please insert a valid password.</p>
-            <p>A valid password must be between 8 and 50 characters.</p>
-          </ValidationMessage>
-        </FormTextBox>
-        <BasicButtonButton label="Create Account" onClick={createAccount} inputButtonStyle={styles.ButtonStyle} />
-       
+        <TextBox onChange={usernameChanged} onBlur={usernameUnclick} value={username} isValid={!invalidUsername}  placeholder="Username" />
+        <TextBox onChange={emailChanged} onBlur={emailUnclick} value={email} isValid={!invalidEmail} placeholder="Email"/>
+        <TextBox onChange={passwordChanged} onBlur={passwordUnclick} value={password} isValid={!invalidPassword}  placeholder="Password" textInputType="password" />
+        <span ref={errorBoxWrapperRef}>
+          <BasicButtonButton label="Create Account" onClick={createAccount} inputButtonStyle={styles.ButtonStyle} />
+          <ErrorMessageBox showError={showError}>
+            {invalidEmail && <div>
+                                  <p>Please insert a valid email.</p>
+                                  <p>A valid email must be in the format <em>someone@provider.com</em>.</p>
+                            </div>}
+            {invalidUsername && <div>
+                                    <p> Please insert a valid username.</p>
+                                    <p>A valid Username must be between 5 and 50 characters.</p>   
+                                </div>}
+            {invalidPassword && <div> 
+                                    <p>Please insert a valid password.</p>
+                                    <p>A valid password must be between 8 and 50 characters.</p>
+                                </div>}
+            {err && <div>
+                      <p>{err}</p>
+                    </div>}
+        </ErrorMessageBox>
+        </span>
       </div>  
        <div className={`${styles.thirdOfWidth} ${styles.invalidOuterDivStyle}`}>        
         </div>    

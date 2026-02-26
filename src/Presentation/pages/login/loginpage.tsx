@@ -5,20 +5,27 @@ import googleLogo from '../../../../public/Googlelogo.svg.webp'
 import styles from './loginpage.module.css'
 import { useTranslations } from '../../Hooks/useTranslations.tsx';
 import { DependencyContext } from '../../../context/DependencyContext.tsx';
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
+import { useLocation } from 'react-router';
 
 interface LoginPageProps {
-  newAccount: boolean; // While you defined this, we'll control the state internally based on the route
+  newAccount: boolean;
 }
+
 
 export default function LoginPage({newAccount}:LoginPageProps) {
 
   const { T } = useTranslations();
+    const location = useLocation();
 
-  const { navigationService } = useContext(DependencyContext);
 
+  const { relocationService: relocationService } = useContext(DependencyContext);
+
+  const redirectUrlRef = useRef(
+    (location.state as any)?.from?.pathname || "/"
+  );
   function microsoftlogin() {
-    navigationService.NavigateToMicrosoftLogin();
+    relocationService.RelocateToMicrosoftLogin();
   }
 
 
@@ -52,7 +59,7 @@ export default function LoginPage({newAccount}:LoginPageProps) {
             </div>
             <div className={styles.quarter2}>
               <p>- OR -</p>
-              {newAccount ? <CreateAccountForm /> : <LoginForm  />}
+              {newAccount ? <CreateAccountForm redirectUrl={redirectUrlRef.current} /> : <LoginForm redirectUrl={redirectUrlRef.current} />}
             </div>
           </div>
         </div>

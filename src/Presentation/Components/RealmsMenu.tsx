@@ -64,7 +64,7 @@ export default function RealmsMenu() {
           </tbody>
         </table>
       </div>
-      <ErrorMessageBox message={err} showError={showError} setShowError={setShowError}></ErrorMessageBox>
+      <ErrorMessageBox message={err} showError={showError} ></ErrorMessageBox>
     </div>
   );
 }

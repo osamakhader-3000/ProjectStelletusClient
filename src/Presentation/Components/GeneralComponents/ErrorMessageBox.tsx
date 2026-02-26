@@ -1,25 +1,23 @@
 import styles from './ErrorMessageBox.module.css';
-import PopupBackground from '../PopupBackground';
+import { useRef } from "react";
 
 interface ErrorMessageBoxProps {
-  message:string|undefined;
-  showError:boolean;
-  setShowError: (value: boolean) =>void;
+  message?:string|undefined;
+  showError?:boolean|false;
+  children?: React.ReactNode;
 }
 
-export function ErrorMessageBox({message,showError, setShowError }: ErrorMessageBoxProps) {
+export function ErrorMessageBox({message,showError,children }: ErrorMessageBoxProps) {
 
-  function backGroundClicked() {
-
-    setShowError(false);
-  }
+  const localRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
-      { showError && <PopupBackground onClick={backGroundClicked}></PopupBackground>}
-      <div className={`${styles.outerdiv} ${styles.fadein} ${ showError ? styles.show : ''}`} >
+      { showError && 
+      <div className={`${styles.outerdiv} ${styles.fadein} ${ showError ? styles.show : ''}`} ref={localRef}>
         {message}
-      </div>
+        {children}
+      </div>}
     </>
   );
 }

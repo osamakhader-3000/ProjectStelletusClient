@@ -1,45 +1,70 @@
-import { BasicTextBox } from "project-manager-client-component-library";
-import React, { forwardRef, useRef, useImperativeHandle } from "react";
-import textBoxStyles from './TextBox.module.css'
+import React, { useEffect, useRef } from "react";
+import formTextBoxStyles from './FormTextBox.module.css';
 
-interface TextBoxProps {
-    placeholder: string;
-    keyUpFunc?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-    textInputStyle?: string;
-    textInputType?: string;
-    innerDivStyle?: string;
-    innerDivStyleActive?: string;
-    outerDivStyle?: string;
-  }
-  
-  
-  export interface TextBoxRef {
-    getValue: () => string | undefined;
-    setValue: (value: string) => void;
-  }
+interface FormTextBoxProps {
+  placeholder?: string;
+  keyUpFunc?: (inputText: string) => void;
+  onClick?: () => void;
+  onUnClick?: () => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  textInputStyle?: string;
+  textInputType?: string;
+  value?: string;
+  isValid?: boolean;
+  onBlur?: () => void;
+}
 
-  const TextBox = forwardRef<TextBoxRef,TextBoxProps>(
-    ({  
-    placeholder,
-    keyUpFunc,
-    textInputType,
-    textInputStyle,
-    innerDivStyle,
-    innerDivStyleActive,
-    outerDivStyle
-  }, ref) => {
+export function TextBox({
+  placeholder,
+  keyUpFunc,
+  onClick,
+  onUnClick,
+  onChange,
+  textInputType,
+  textInputStyle,
+  value,
+  isValid,
+  onBlur,
+}: FormTextBoxProps) {
 
-    const localRef = useRef<TextBoxRef>(null);
-    useImperativeHandle(ref, () => ({
-        getValue: () => localRef.current?.getValue(),
-        setValue: (value: string) => {
-          if (localRef.current) {
-            localRef.current.setValue(value);
-          }
-        },
-      }));
+  const localRef = useRef<HTMLInputElement>(null);
 
-    return (<BasicTextBox textInputType={textInputType?textInputType:'text'} keyUpFunc={keyUpFunc} ref={localRef} placeholder={placeholder} textInputStyle={textInputStyle?textInputStyle:textBoxStyles.inputTextbox} innerDivStyle={innerDivStyle?innerDivStyle:textBoxStyles.divTextbox} innerDivStyleActive={innerDivStyleActive?innerDivStyleActive:textBoxStyles.divTextboxActive} outerDivStyle={outerDivStyle?outerDivStyle:textBoxStyles.outerDivTextbox} />);
-});
+  const handleOutsideClick = (event: MouseEvent) => {
+      if (localRef.current && !localRef.current.contains(event.target as Node)) {        
+        onUnClick?.();
+      }
+    };
+  useEffect(() => {
+    
 
-export default TextBox;
+    
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [onUnClick]);
+
+  const handleInsideClick = () => {
+    document.addEventListener("click", handleOutsideClick);
+    localRef.current?.focus();
+    onClick?.();
+  };
+
+  return (
+    <div className={formTextBoxStyles.outerDivStyle}>
+    <input
+      name="testtextbox"
+      onClick={handleInsideClick}
+      value={value ?? ""}
+      aria-invalid={!isValid}
+      onKeyUp={(e) => keyUpFunc?.((e.target as HTMLInputElement).value)}
+      onChange={onChange}
+      placeholder={placeholder || ""}
+      type={textInputType || "text"}
+      className={`
+        ${formTextBoxStyles.textbox}
+        ${!isValid ? formTextBoxStyles.invalid : ''}
+        ${textInputStyle || ''}
+      `.trim()}
+      ref={localRef}
+      onBlur={onBlur}
+    /></div>
+  );
+}

@@ -1,29 +1,33 @@
 import { createContext } from 'react';
 import { RealmRepository } from '../Data/Repositories/RealmRepository';
 import { RealmApi } from '../Data/api/Implementation/RealmApi';
-import {RealmService} from '../Application/UseCases/RealmService';
-import { TaskService } from '../Application/UseCases/TaskService';
+import {RealmService} from '../Application/Services/RealmService';
+import { TaskService } from '../Application/Services/TaskService';
 import { TaskRepository } from '../Data/Repositories/TaskRepository';
 import { TaskApi } from '../Data/api/Implementation/TaskApi';
 import { StatusApi } from '../Data/api/Implementation/StatusApi';
-import { StatusService } from '../Application/UseCases/StatusService';
+import { StatusService } from '../Application/Services/StatusService';
 import { StatusRepository } from '../Data/Repositories/StatusRepository';
-import { ProfileImageMenuService } from '../Application/UseCases/ProfileImageMenuService';
+import { ProfileImageMenuService } from '../Application/Services/ProfileImageMenuService';
 import { ProfileImageMenuRepository } from '../Data/Repositories/ProfileImageMenuRepository';
-import { AuthService } from '../Application/UseCases/AuthService';
-import { AuthApi } from '../Data/api/Implementation/AuthApi';
-import { AuthRepository } from '../Data/Repositories/AuthRepository';
+import { UserService } from '../Application/Services/UserService.ts';
+import { UserApi } from '../Data/api/Implementation/UserApi.ts';
+import { UserRepository } from '../Data/Repositories/UserRepository.ts';
 import { AuthStorage } from '../Data/LocalData/Implemetation/AuthStorage';
-import { IAuthService } from '../Application/Services/IAuthService';
-import { IStatusService } from '../Application/Services/IStatusService';
-import { ITaskService } from '../Application/Services/ITaskService';
-import { IProfileImageMenuService } from '../Application/Services/IProfileImageMenuService';
-import { IRealmService } from '../Application/Services/IRealmService';
-import { INavigationService } from '../Application/Services/INavigationService';
-import { NavigationService } from '../Application/UseCases/NavigationService';
-import { NavigationStorage } from '../Data/LocalData/Implemetation/NavigationStorage';
-import { NavigationRepository } from '../Data/Repositories/NavigationRepository';
+import { IUserService } from '../Application/Interfaces/IUserService.ts';
+import { IStatusService } from '../Application/Interfaces/IStatusService';
+import { ITaskService } from '../Application/Interfaces/ITaskService';
+import { IProfileImageMenuService } from '../Application/Interfaces/IProfileImageMenuService';
+import { IRealmService } from '../Application/Interfaces/IRealmService';
+import { IRelocationService } from '../Application/Interfaces/IRelocationService.ts';
+import { RelocationService } from '../Application/Services/RelocationService.ts';
+import { RelocationRepository } from '../Data/Repositories/RelocationRepository.ts';
 import { IAuthStorage } from '../Data/LocalData/Interfaces/IAuthStorage';
+import { AuthEventBus } from '../Channels/AuthEventBus';
+import { ErrorHandlingBus } from '../Channels/ErrorHandlingBus';
+import { AuthListener } from '../Presentation/Listeners/AuthListener.ts';
+import { AuthApiService } from '../Data/Commons/AuthApiService.ts';
+import { AuthApi } from '../Data/api/Implementation/AuthApi.ts';
 
 
 const realmapi = new RealmApi();
@@ -37,26 +41,36 @@ const taskServ = new TaskService(taskRepo);
 const statusapi = new StatusApi();
 const statusRepo = new StatusRepository(statusapi);
 const statusServ = new StatusService(statusRepo);
-const authApi = new AuthApi();
+
+const authEventBus = new AuthEventBus();
+const errorHandlingBus = new ErrorHandlingBus();
+
 const authStorage = new AuthStorage();
-const authRepository = new AuthRepository(authApi,authStorage);
-const authServ = new AuthService(authRepository);
-const navigateStore = new NavigationStorage();
-const navigateRepo = new NavigationRepository(navigateStore);
-const navigateServ = new NavigationService(navigateRepo);
+const authApi= new AuthApi();
+const authService = new AuthApiService(authApi, authStorage, authEventBus, errorHandlingBus);
+
+const userApi = new UserApi();
+const userRepository = new UserRepository(userApi,authStorage,authService);
+const userServ = new UserService(userRepository);
+const navigateRepo = new RelocationRepository();
+const navigateServ = new RelocationService(navigateRepo);
 
 
+const authListener = new AuthListener(authEventBus, userServ);
+authListener.StartListening();
 
 
-// Define the context interface
+// Define the context interface 
 interface DependencyContextType {
   realmService: IRealmService;
   profileImgMenuService: IProfileImageMenuService;
   taskService: ITaskService;
   statusService: IStatusService;
-  authService: IAuthService;
-  navigationService:INavigationService;
+  authService: IUserService;
+  relocationService:IRelocationService;
   authStorage:IAuthStorage;
+  errorHandlingBus:ErrorHandlingBus;
+  authEventBus:AuthEventBus;
 }
 
 export const DependencyContext = createContext<DependencyContextType>({
@@ -64,13 +78,15 @@ export const DependencyContext = createContext<DependencyContextType>({
   profileImgMenuService:profileImgMenuServ,
   taskService:taskServ,
   statusService:statusServ,
-  authService:authServ,
-  navigationService:navigateServ,
-  authStorage:authStorage
+  authService:userServ,
+  relocationService:navigateServ,
+  authStorage:authStorage,
+  errorHandlingBus:errorHandlingBus,
+  authEventBus:authEventBus
 });
 
 export const DependencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,statusService:statusServ ,authService:authServ,navigationService:navigateServ,authStorage:authStorage}}>
+  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,statusService:statusServ ,authService:userServ,relocationService:navigateServ,authStorage:authStorage,errorHandlingBus:errorHandlingBus,authEventBus:authEventBus}}>
     {children}
   </DependencyContext.Provider>
 );

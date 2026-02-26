@@ -1,5 +1,5 @@
 import Task from "../../Domain/Entities/Task";
-import { ITaskService } from "../Services/ITaskService";
+import { ITaskService } from "../Interfaces/ITaskService";
 import { ITaskRepository } from "../../Domain/Repositories/ITaskRepository";
 
 

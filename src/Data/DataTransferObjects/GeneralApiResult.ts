@@ -1,12 +1,44 @@
+
+enum ErrorTypes {
+        Unauthorized = 'Unauthorized',
+        NetworkError = 'NetworkError',
+        ServerError = 'ServerError',
+        UnknownError = 'UnknownError'
+}
+
 export class GeneralApiResult<T> {
     public readonly data: T | null;
-    public readonly resultCode: number;
-    public readonly resultMessage: string;
+    public readonly success: boolean = false;
+    public readonly ErrorType: ErrorTypes | null = null;
+    public readonly resultMessage: string | null = null;
 
- 
-    constructor(resultCode: number, resultMessage: string , data: T | null) {
-        this.resultCode = resultCode;
+    constructor(success: boolean,errorType: ErrorTypes | null, resultMessage: string | null, data: T | null) {
+        this.success = success;
+        this.ErrorType = errorType;
         this.resultMessage = resultMessage;
         this.data = data;
+
     }
 }
+
+
+export class GeneralApiResultFactory {
+    public static CreateFromErrorResponse<T>(error: any): GeneralApiResult<T> {
+
+        let errorType: ErrorTypes;
+        if(error.status == 401)
+            errorType = ErrorTypes.Unauthorized;
+        else if(error.status >= 500)
+            errorType = ErrorTypes.ServerError;
+        else if(error.status >= 400)
+            errorType = ErrorTypes.NetworkError;
+        else
+            errorType = ErrorTypes.UnknownError;
+
+        return new GeneralApiResult<T>(
+                false,
+                errorType,
+                error?.response?.data?.Message ?? error?.message ?? "Unknown error",
+                null
+        );
+    }}

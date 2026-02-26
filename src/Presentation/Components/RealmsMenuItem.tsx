@@ -10,7 +10,7 @@ export default function RealmsMenuItem({ID,Name}:RealmsMenuItemProps){
 
 return(
 <div>
-    <Link to={'/realm/'+ID}  className={styles.realmsmenurelmlink}>
+    <Link to={'/'+ID}  className={styles.realmsmenurelmlink}>
             <div>
                 <div className={styles.realmsmenurealmimg}>
                   <img src="/realmicon.svg" alt=''></img>                    

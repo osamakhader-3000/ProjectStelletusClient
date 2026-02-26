@@ -1,34 +1,45 @@
 import { useContext,useState,useEffect } from 'react';
-import { Navigate } from 'react-router';
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { DependencyContext } from '../../context/DependencyContext';
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
     const {authService} = useContext(DependencyContext);
-    const {navigationService} = useContext(DependencyContext);
+    const {authEventBus} = useContext(DependencyContext);
+    const location = useLocation();
     
     useEffect(() => {
       const checkAuth = async () => {
         try {
-          debugger
-          const loggedIn = await authService.CheckLoggedIn();
-          setIsLoggedIn(loggedIn);
-          navigationService.SetRedirectUrl(location.pathname + location.search);
+
+        
+
+          let userLogginStatus = await authService.CheckLoggedIn();
+          setIsLoggedIn(userLogginStatus.IsLoggedIn);
+          if(!userLogginStatus.IsLoggedIn)
+          {
+
+            if(userLogginStatus.Expired)
+              authEventBus.UnauthorizedAccessAttempted();
+
+            if(!userLogginStatus.Expired)
+              authEventBus.FailedLoginAttempted();
+          
+          }
         } catch (error) {
-          console.error('Error checking login status:', error);
-          setIsLoggedIn(false); // Default to false on error
+          setIsLoggedIn(false);
         }
       };
       checkAuth();
-    }, []);
+    }, [location.pathname]);
     
     // Show loading state while checking authentication  
     if (isLoggedIn === null) {
       return <div>Loading...</div>;
     }
 
-  return isLoggedIn ? <>{children}</> : <Navigate to="/login" replace />;
+  return isLoggedIn ?<Outlet />: <Navigate to="/login" replace state={{ from: location }}/>;
 };
 
 export default ProtectedRoute;

@@ -1,5 +1,5 @@
 import ProfileImageMenuItem from "../DataTransferObjects/ProfileImageMenuItem";
-import { IProfileImageMenuService } from "../Services/IProfileImageMenuService";
+import { IProfileImageMenuService } from "../Interfaces/IProfileImageMenuService";
 import {IProfileImageMenu} from "../DataTransferInterfaces/IProfileImageMenu";
 
 export class ProfileImageMenuService implements IProfileImageMenuService{

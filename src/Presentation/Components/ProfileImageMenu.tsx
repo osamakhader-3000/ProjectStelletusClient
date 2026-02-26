@@ -9,7 +9,7 @@ export default function ProfileImageMenu(){
 
   const [imgMenuItems,setImgMenuItems] = useState<ProfileImageMenuItem[]>([]);
   const [menuVisible, setMenuVisible] = useState<boolean>(false);  
-    const {profileImgMenuService,authService} = useContext(DependencyContext);
+    const {profileImgMenuService,authService: userService} = useContext(DependencyContext);
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -25,8 +25,10 @@ export default function ProfileImageMenu(){
     },[]);
 
     function menuItemClick(linkRef:string){
-        if(linkRef == "/logout")
-            authService.Logout();
+        if(linkRef == "/logout"){
+            userService.Logout();
+            navigate('/login');
+        }
         else
             navigate(linkRef);
     }

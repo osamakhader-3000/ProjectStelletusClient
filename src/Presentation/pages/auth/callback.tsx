@@ -4,14 +4,14 @@ import { useContext, useEffect} from 'react';
 
 export default function AuthCallback() {
 
-    const { navigationService } = useContext(DependencyContext);
+    const { relocationService: relocationService } = useContext(DependencyContext);
     
     useEffect(() => {
 
         const params = new URLSearchParams(window.location.search);
         const code = params.get("code");
         if (!code) {
-            navigationService.NavigateTo("/login");
+            relocationService.RelocateTo("/login");
             return;
         }
 

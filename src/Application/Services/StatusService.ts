@@ -1,5 +1,5 @@
 import Status from "../../Domain/Entities/Status";
-import { IStatusService } from "../Services/IStatusService";
+import { IStatusService } from "../Interfaces/IStatusService";
 import { IStatusRepository } from "../../Domain/Repositories/IStatusRepository";
 
 export class StatusService implements IStatusService{

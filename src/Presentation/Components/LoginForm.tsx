@@ -1,19 +1,22 @@
-import React, { useContext,useState } from "react";
+import React, { useContext,useState,useEffect, useRef } from "react";
 import AuthForm from "./AuthForm";
-import textBoxStyles from './GeneralComponents/TextBox.module.css'
 import styles from './LoginForm.module.css'
 import { DependencyContext } from '../../context/DependencyContext';
 import { ErrorMessageBox } from './GeneralComponents/ErrorMessageBox';
-import {FormTextBox} from './GeneralComponents/FormTextBox'
-import {TestTextBox} from './GeneralComponents/TestTextBox' 
+import {TextBox} from './GeneralComponents/TextBox' 
 import { BasicButtonButton } from "project-manager-client-component-library";
-import { ValidationMessage } from "./GeneralComponents/ValidationMessage";
 import { useNavigate } from "react-router";
+import { User } from "../../Domain/Entities/User";
 
-const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  redirectUrl: string;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ redirectUrl }) => {
 
   const navigate = useNavigate();
-  const {authService,navigationService} = useContext(DependencyContext);
+  const {authService} = useContext(DependencyContext);
+
   const [err,setErr] = useState<string|undefined>(undefined);
   const [showError,setShowError] = useState(false);
   const [invalidUsername,setInvalidUsername] = useState(false);
@@ -21,32 +24,19 @@ const LoginForm: React.FC = () => {
   const [invalidPassword,setInvalidPassword] = useState(false);
   const [password,setPassword] = useState('');
 
+  const errorBoxWrapperRef = useRef<HTMLDivElement>(null);
+  const loginButtonWrapperRef = useRef<HTMLDivElement>(null);
 
-  const [usernameShowValidationMessage, setUsernameShowValidationMessage] = React.useState(false);
-  const [passwordShowValidationMessage, setPasswordShowValidationMessage] = React.useState(false);
 
   const usernameChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
     setInvalidUsername(false);
   }
 
-  const validateUsername = (username:string) : boolean => { 
-    return username.length > 0;
-  }
-
-  const usernameUnclick = () => {
-    setInvalidUsername(false);
-    setUsernameShowValidationMessage(false);
-  }
 
 
   const passwordChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
-  }
-
-  const passwordUnclick = () => {
-    setInvalidPassword(false);
-    setPasswordShowValidationMessage(false);
   }
 
 
@@ -55,66 +45,63 @@ const LoginForm: React.FC = () => {
     setInvalidUsername(false);
     setInvalidPassword(false);
 
-    setUsernameShowValidationMessage(false);
-    setPasswordShowValidationMessage(false);
-
     setShowError(false);
 
-    var valid = true;
-
-    
     if(username.length === 0)
     {
-      setInvalidUsername(true);
-      if(valid){
-        setErr("Please insert your username");
-        setShowError(true);
-      }
+      setInvalidUsername(true);      
+      setErr("Please insert your username");
+      setShowError(true);
+      return;
     }
 
     if(password.length === 0)
     {
       setInvalidPassword(true);
-      if(valid){
-        valid = false;
-        setErr("Please insert your password");
-        setShowError(true);
-      }
+      setErr("Please insert your password");
+      setShowError(true);
+      return;
     }
 
-    if(!valid)return;
+    let user = new User('', username, '', password);
 
-    var redirectUrl = navigationService.GetRedirectUrl()||"/tasks";       
-    
-    navigationService.SetRedirectUrl(redirectUrl);
-    var result = await authService.LoginAccount(username,password); 
-    
-    if(!result.hasError)           
-      navigate(redirectUrl);    
-    else{
-      setErr(result.message);
-      setShowError(result.hasError);
+    let loginSuccess = await authService.LoginAccount(user); 
+    if(loginSuccess){
+      navigate(redirectUrl, { replace: true });
     }
-
+ 
   };
 
+  useEffect(() => {
+    if (!showError) return;
+
+    const onPointerDown = (e:Event) => {
+      const target = e.target as Node;
+
+      if (errorBoxWrapperRef.current?.contains(target)) return;
+      if (loginButtonWrapperRef.current?.contains(target)) return;
+
+      setShowError(false);
+    };
+
+    document.addEventListener("click", onPointerDown, true);
+    return () => document.removeEventListener("click", onPointerDown, true);
+  }, [showError]);
 
   return (
     <AuthForm buttonLabel="Login" onSubmit={login} linkPrompt="New User?" linkText="Create account" linkHref="/signup">
       <div className={styles.container}>
         <div className={styles.thirdOfWidth}></div>
-        <div className={`${styles.loginformdiv} ${styles.thirdOfWidth}`}>
-          <FormTextBox showValidationMessage={usernameShowValidationMessage} isValid={!invalidUsername} value={username} onBlur={usernameUnclick} onChange={usernameChanged} placeholder="Username" innerDivStyle={`${textBoxStyles.divTextbox} fullWidth `} innerDivStyleActive={`${textBoxStyles.divTextboxActive} fullWidth`} outerDivStyle={`${textBoxStyles.outerDivTextbox} ${styles.textboxOuterDivStyle}`} >
-            <ValidationMessage>Please insert your username</ValidationMessage>
-          </FormTextBox>
-          <FormTextBox textInputType="password" showValidationMessage={passwordShowValidationMessage} isValid={!invalidPassword} value={password} onBlur={passwordUnclick} onChange={passwordChanged} placeholder="Password" innerDivStyle={`${textBoxStyles.divTextbox} fullWidth`} innerDivStyleActive={`${textBoxStyles.divTextboxActive} fullWidth`} outerDivStyle={`${textBoxStyles.outerDivTextbox} ${styles.textboxOuterDivStyle}`} >
-            <ValidationMessage>Please insert your password</ValidationMessage>
-          </FormTextBox>
-         <TestTextBox placeholder="do you have a name?" value={username} onChange={usernameChanged} isValid={!invalidUsername}  >
+        <div className={`${styles.loginformdiv}`} style={{width: '25%'}}>
 
-         </TestTextBox>
-          <BasicButtonButton label="Login" onClick={login} inputButtonStyle={styles.ButtonStyle} />
-          <ErrorMessageBox message={err} showError={showError} setShowError={setShowError}></ErrorMessageBox>
+         <TextBox placeholder="Username" value={username} onChange={usernameChanged} isValid={!invalidUsername} onUnClick={()=>{setInvalidUsername(false);}} />
+         <TextBox placeholder="Password" value={password} onChange={passwordChanged} isValid={!invalidPassword} onUnClick={()=>{setInvalidPassword(false);}} />
+          <span ref={loginButtonWrapperRef}>
+            <BasicButtonButton label="Login" onClick={login} inputButtonStyle={styles.ButtonStyle} />
+          </span>
+          <span ref={errorBoxWrapperRef}>
+            <ErrorMessageBox message={err} showError={showError}></ErrorMessageBox>
+          </span>
         </div>            
         <div className={`${styles.thirdOfWidth} ${styles.invalidOuterDivStyle}`}></div>  
       </div> 

@@ -12,6 +12,7 @@ export default function TasksPage(){
 
     useEffect(() => {
       const fetchData = async () => {
+
     
         var _tasks = await taskService.ListTask();  
         setData(_tasks);

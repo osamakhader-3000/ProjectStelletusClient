@@ -20,5 +20,6 @@
     "status-list":"",
     "user-get":"",
     "exchange-code-for-token":"api/auth/exchange",
-    "refresh-token":"api/auth/refresh"
+    "refresh-token":"api/auth/refresh",
+    "test":"api/auth/test"
 }

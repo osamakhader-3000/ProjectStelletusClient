@@ -1,4 +1,4 @@
-import { IRealmService } from "../Services/IRealmService";
+import { IRealmService } from "../Interfaces/IRealmService";
 import { IRealmRepository } from "../../Domain/Repositories/IRealmRepository";
 import Realm from "../../Domain/Entities/Realm";
 

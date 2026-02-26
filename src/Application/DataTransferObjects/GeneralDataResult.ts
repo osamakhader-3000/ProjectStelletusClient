@@ -1,4 +1,4 @@
-export default class GeneralApiResult
+export default class GeneralDataResult
 {
     HasError:boolean;
     Error:string;
