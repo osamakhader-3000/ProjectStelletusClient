@@ -4,20 +4,17 @@ import { useContext, useEffect} from 'react';
 
 export default function AuthCallback() {
 
-    const { relocationService: relocationService } = useContext(DependencyContext);
+    const { relocationService: relocationService,userService: userService } = useContext(DependencyContext);
     
     useEffect(() => {
 
         const params = new URLSearchParams(window.location.search);
         const code = params.get("code");
-        if (!code) {
-            relocationService.RelocateTo("/login");
-            return;
-        }
+        userService.MicrosoftLoginCallBack();
 
        
 
-
+        
 
 
       

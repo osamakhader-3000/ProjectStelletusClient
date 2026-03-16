@@ -66,7 +66,7 @@ interface DependencyContextType {
   profileImgMenuService: IProfileImageMenuService;
   taskService: ITaskService;
   statusService: IStatusService;
-  authService: IUserService;
+  userService: IUserService;
   relocationService:IRelocationService;
   authStorage:IAuthStorage;
   errorHandlingBus:ErrorHandlingBus;
@@ -78,7 +78,7 @@ export const DependencyContext = createContext<DependencyContextType>({
   profileImgMenuService:profileImgMenuServ,
   taskService:taskServ,
   statusService:statusServ,
-  authService:userServ,
+  userService:userServ,
   relocationService:navigateServ,
   authStorage:authStorage,
   errorHandlingBus:errorHandlingBus,
@@ -86,7 +86,7 @@ export const DependencyContext = createContext<DependencyContextType>({
 });
 
 export const DependencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,statusService:statusServ ,authService:userServ,relocationService:navigateServ,authStorage:authStorage,errorHandlingBus:errorHandlingBus,authEventBus:authEventBus}}>
+  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,statusService:statusServ ,userService:userServ,relocationService:navigateServ,authStorage:authStorage,errorHandlingBus:errorHandlingBus,authEventBus:authEventBus}}>
     {children}
   </DependencyContext.Provider>
 );

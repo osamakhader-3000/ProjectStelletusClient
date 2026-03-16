@@ -1,16 +1,35 @@
 export class User {
    
-    ID: string|null;
-    Username: string | null;
-    Email: string;
-    Password: string | null;
-    Token: string | null;
+    id: string|null;
+    username: string | null;
+    email: string;
+    password: string | null;
+    accountStatus: UserAccountStatus;
+    emailVerificationStatus: UserEmailVerificationStatus;
 
-    constructor(id: string|null , username: string | null = null, email: string, password: string | null = null, token: string | null = null) {
-        this.ID = id;
-        this.Username = username;
-        this.Email = email;
-        this.Password = password;
-        this.Token = token;
+
+
+    constructor(id: string|null , username: string | null = null, email: string, password: string | null = null, accountStatus: UserAccountStatus = UserAccountStatus.Temporary, emailVerificationStatus: UserEmailVerificationStatus = UserEmailVerificationStatus.Unverified) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.accountStatus = accountStatus;
+        this.emailVerificationStatus = emailVerificationStatus;
     }
+}
+
+
+export enum UserAccountStatus
+{   
+    Temporary,
+    Active,
+    Suspended,
+    Deleted
+}
+
+export enum UserEmailVerificationStatus
+{
+    Unverified,
+    Verified
 }

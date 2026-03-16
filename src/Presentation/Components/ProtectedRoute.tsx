@@ -5,7 +5,7 @@ import { DependencyContext } from '../../context/DependencyContext';
 const ProtectedRoute = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-    const {authService} = useContext(DependencyContext);
+    const {userService: authService} = useContext(DependencyContext);
     const {authEventBus} = useContext(DependencyContext);
     const location = useLocation();
     

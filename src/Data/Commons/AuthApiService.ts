@@ -36,11 +36,15 @@ export class AuthApiService implements IAuthService {
       if(authResult && authResult.success)
         result = await fn();
 
-      if(result && result instanceof GeneralApiResult && !result.success &&  result.ErrorType == 'Unauthorized')
+      if(result && result instanceof GeneralApiResult && !result.success)
+      {
+        if(result.ErrorType == 'Unauthorized')
           this.authEventBus.UnauthorizedAccessAttempted();
-
-      if(result && result instanceof GeneralApiResult && !result.success && result.ErrorType != 'Unauthorized')
+        else if(result.ErrorType == 'EmailVerificationRequired')
+          this.authEventBus.EmailVerificationRequired();
+        else
           throw new Error(result.resultMessage ?? "Unknown error");
+      }
 
       if(result == null)
           throw new Error("Unknown error");
@@ -100,21 +104,18 @@ export class AuthApiService implements IAuthService {
 
 
   async LoginAfter(fn: () => Promise<GeneralApiResult<Date>>): Promise<AuthenticationResult> {
+      let loginResult = await fn();
+      
+      if(loginResult.data && loginResult.success)
+      {    
+        this.SaveLoginResult(loginResult.success, loginResult.data); 
+        return new AuthenticationResult(loginResult.data, true); 
+      }
 
-   debugger;
-            let loginResult = await fn();
-
-             if(loginResult.data && loginResult.success)
-             {    
-                this.SaveLoginResult(loginResult.success, loginResult.data); 
-                return new AuthenticationResult(loginResult.data, true); 
-             }
-             this.errorHandlingBus.ErrorOccured(loginResult?.resultMessage ?? "Unknown error");
-             return new AuthenticationResult(null,false);
-
+    
+      this.errorHandlingBus.ErrorOccured(loginResult?.resultMessage ?? "Unknown error");
+      return new AuthenticationResult(null,false);
 
     }
-
-
 
 }

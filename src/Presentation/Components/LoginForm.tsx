@@ -15,7 +15,7 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ redirectUrl }) => {
 
   const navigate = useNavigate();
-  const {authService} = useContext(DependencyContext);
+  const {userService: userService} = useContext(DependencyContext);
 
   const [err,setErr] = useState<string|undefined>(undefined);
   const [showError,setShowError] = useState(false);
@@ -65,7 +65,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectUrl }) => {
 
     let user = new User('', username, '', password);
 
-    let loginSuccess = await authService.LoginAccount(user); 
+    let loginSuccess = await userService.LoginAccount(user); 
     if(loginSuccess){
       navigate(redirectUrl, { replace: true });
     }

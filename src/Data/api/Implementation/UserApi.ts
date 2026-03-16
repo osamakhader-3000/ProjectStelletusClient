@@ -24,10 +24,10 @@ export class UserApi extends GeneralApi implements IUserApi {
     }
 
 
-    async CreateAccount(user: User): Promise<GeneralApiResult<Date>> {
+    async CreateAccount(user: User): Promise<GeneralApiResult<boolean>> {
      
         let url = urls['create-account'];
-        let result = await this.GeneralApiCaller<Date>('POST', url, user, null);
+        let result = await this.GeneralApiCaller<boolean>('POST', url, user, null);
         return result;
     }
 
@@ -48,8 +48,20 @@ export class UserApi extends GeneralApi implements IUserApi {
         let result = await this.GeneralApiCaller<User>('GET', url);
         return result;
     }
- 
-    
+
+    async MicrosoftLoginCallBack(): Promise<GeneralApiResult<boolean>> {
+        let url = urls['microsoft-login-callback'];
+        let result = await this.GeneralApiCaller<boolean>('POST', url);
+        return result;
+    }
+
+    async GetCurrentUser(): Promise<GeneralApiResult<User>> {
+        let url = urls['current-user'];
+        let result = await this.GeneralApiCaller<User>('GET', url);
+        return result;
+    }
+
+
 }
 
 

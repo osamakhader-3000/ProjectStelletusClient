@@ -24,15 +24,15 @@ export class UserRepository implements IUserRepository {
 
         let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<User>>>(async () => {
             return this.userApi.FetchUser(token);
-        });
+        }); 
         return result.data??new User('','','','');
     }
 
     async LoginAccount(user: User): Promise<AuthenticationResult> {        
-        if(!user.Username || !user.Password)
+        if(!user.username || !user.password)
             throw new Error("Username and Password are required");
 
-        let loginReq = new LoginRequest(user.Username, user.Password);
+        let loginReq = new LoginRequest(user.username, user.password);
         
         return await this.authService.LoginAfter(async () => {
             let result = await this.userApi.LoginAccount(loginReq);
@@ -40,12 +40,12 @@ export class UserRepository implements IUserRepository {
         });
     }
 
-    async CreateAccount(user: User): Promise<AuthenticationResult> {
-        debugger;
-        return await this.authService.LoginAfter(async () => {
+    async CreateAccount(user: User): Promise<boolean> {
+        
+        
             let result= await this.userApi.CreateAccount(user);        
-            return result;
-        });
+            return result.data??false;
+        
     }
   
 
@@ -57,7 +57,8 @@ export class UserRepository implements IUserRepository {
             return await this.authService.Refresh();
         }
 
-    async Logout(): Promise<void> {    
+    async Logout(): Promise<void> {   
+        this.authStorage.RemoveCurrentUser(); 
         this.authStorage.RemoveLoginExpireTime();    
         this.userApi.Logout();
     }
@@ -71,6 +72,27 @@ export class UserRepository implements IUserRepository {
        return result.resultMessage == '';
     }
 
+    async MicrosoftLoginCallBack(): Promise<boolean> {
     
+            let result = await this.userApi.MicrosoftLoginCallBack();
+            return result.data??false;
 
+    }
+
+    async GetCurrentUser(): Promise<User | null> {
+
+        let cachedUser = this.authStorage.GetCurrentUser();
+        if(cachedUser)
+            return cachedUser;
+
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<User>>>(async () => {
+            return this.userApi.GetCurrentUser();
+        });
+
+        if(result.data)             
+            this.authStorage.SetCurrentUser(result.data);
+
+            
+        return result?.data ?? null;
+    }
 }

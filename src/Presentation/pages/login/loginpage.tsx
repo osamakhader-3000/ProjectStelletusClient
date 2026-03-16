@@ -50,12 +50,6 @@ export default function LoginPage({newAccount}:LoginPageProps) {
                 </span>
                 <span>Continue with Microsoft Account</span>
               </button>
-              <button className={styles.socialbtn}>
-                <span className={styles.sociallogowrapper}>
-                  <img className={styles.sociallogo} src={googleLogo} alt="Google logo" />
-                </span>
-                <span>Continue with Google Account</span>
-              </button>
             </div>
             <div className={styles.quarter2}>
               <p>- OR -</p>

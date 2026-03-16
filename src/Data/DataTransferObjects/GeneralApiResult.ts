@@ -3,6 +3,8 @@ enum ErrorTypes {
         Unauthorized = 'Unauthorized',
         NetworkError = 'NetworkError',
         ServerError = 'ServerError',
+        EmailVerificationRequired = 'EmailVerificationRequired',
+        Forbidden = 'Forbidden',
         UnknownError = 'UnknownError'
 }
 
@@ -28,6 +30,14 @@ export class GeneralApiResultFactory {
         let errorType: ErrorTypes;
         if(error.status == 401)
             errorType = ErrorTypes.Unauthorized;
+        else if(error.status == 403){
+
+            if(error?.response?.data?.error == "email_verification_required")
+                errorType = ErrorTypes.EmailVerificationRequired;
+            else
+                errorType = ErrorTypes.Forbidden;
+
+        }
         else if(error.status >= 500)
             errorType = ErrorTypes.ServerError;
         else if(error.status >= 400)

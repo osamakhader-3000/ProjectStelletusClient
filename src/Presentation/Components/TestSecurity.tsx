@@ -4,7 +4,7 @@ import { DependencyContext } from '../../context/DependencyContext';
 
 export default function TestSecurity(){
 
-     const { authService } = useContext(DependencyContext);
+     const { userService: authService } = useContext(DependencyContext);
     const [testResult, setTestResult] = useState<string>("");
 
    

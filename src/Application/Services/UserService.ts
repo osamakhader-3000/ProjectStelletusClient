@@ -1,7 +1,7 @@
 import { User } from "../../Domain/Entities/User";
 import { IUserService } from "../Interfaces/IUserService";
 import { IUserRepository } from "../Repositories/IUserRepository";
-import UserLogginStatus from "../../Domain/Entities/Authentication/UserLogginStatus";
+import UserLogInStatus from "../../Domain/Entities/Authentication/UserLogInStatus";
 
 export class UserService implements IUserService{
 
@@ -26,7 +26,7 @@ export class UserService implements IUserService{
 
     async CreateAccount(user: User): Promise<boolean> {       
         let result = await this.userRepository.CreateAccount(user);       
-        return result.success;
+        return result;
         
     }
 
@@ -37,12 +37,12 @@ export class UserService implements IUserService{
     }
 
 
-    async CheckLoggedIn(): Promise<UserLogginStatus> {        
+    async CheckLoggedIn(): Promise<UserLogInStatus> {        
 
 
         let loginExpireDateTime = this.userRepository.GetLoginExpireTime(); 
         if( loginExpireDateTime == null){
-            return new UserLogginStatus(false,false);
+            return new UserLogInStatus(false,false);
         }
 
         let expired = new Date() > loginExpireDateTime;
@@ -50,10 +50,10 @@ export class UserService implements IUserService{
         {    
            let result = await this.userRepository.Refresh();
            if(!result.success)
-               return new UserLogginStatus(false,true);
+               return new UserLogInStatus(false,true);
         }
 
-        return new UserLogginStatus(true,false); 
+        return new UserLogInStatus(true,false); 
     }
 
    
@@ -62,7 +62,14 @@ export class UserService implements IUserService{
         this.userRepository.Logout();
     }
 
-    
+    async MicrosoftLoginCallBack(): Promise<boolean> {
+        return this.userRepository.MicrosoftLoginCallBack();
+    }
+
+    async GetCurrentUser(): Promise<User | null> {
+        let user = await this.userRepository.GetCurrentUser();
+        return user;
+    }
     
 }
     

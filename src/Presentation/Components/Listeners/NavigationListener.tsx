@@ -10,6 +10,10 @@ export function NavigationListener() {
     authEventBus.SubscribeToDenyAccess(() => {
           navigate('/login', {replace: true,state: { from: location }});
     });
+
+    authEventBus.SubscribeToEmailVerificationRequired(() => {
+        navigate('/emailverification', {replace: true,state: { from: location }});
+    });
     
     return null;
 }

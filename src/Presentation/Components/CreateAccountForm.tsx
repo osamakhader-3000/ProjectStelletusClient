@@ -25,7 +25,7 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = ({ redirectUrl }) =>
   const [showError,setShowError] = React.useState(false);
 
   const errorBoxWrapperRef = useRef<HTMLDivElement>(null);
-  const {authService} = useContext(DependencyContext);
+  const {userService: userService} = useContext(DependencyContext);
   const [err,setErr] = React.useState<string|undefined>(undefined);
 
  const navigate = useNavigate();
@@ -83,12 +83,11 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = ({ redirectUrl }) =>
 
     let user = new User(null, username, email, password);
 
-    var success = await authService.CreateAccount(user);
+    var success = await userService.CreateAccount(user);
 
-debugger;
 
     if(success){
-        navigate(redirectUrl, { replace: true });
+        navigate("/emailverification", { replace: true });
     }
    
   };

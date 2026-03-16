@@ -1,7 +1,7 @@
 {
     "security-app-domain":"",
     "create-user-api":"api/user/create",
-    "microsoft-login":"api/auth/microsoft-login",
+    "microsoft-login":"api/auth/microsoftlogin",
     "create-account":"api/auth/createaccount",
     "login":"api/auth/login",
     "tasksdomain":"http://localhost",
@@ -21,5 +21,7 @@
     "user-get":"",
     "exchange-code-for-token":"api/auth/exchange",
     "refresh-token":"api/auth/refresh",
-    "test":"api/auth/test"
+    "test":"api/auth/verificationrequired",
+    "microsoft-login-callback":"api/auth/microsoftlogincallback",
+    "current-user":"api/auth/currentuser"
 }

@@ -1,4 +1,4 @@
-import UserLogginStatus from '../../Domain/Entities/Authentication/UserLogginStatus';
+import UserLogginStatus from '../../Domain/Entities/Authentication/UserLogInStatus';
 import {User} from '../../Domain/Entities/User'
 
 export interface IUserService{
@@ -8,4 +8,6 @@ export interface IUserService{
     Logout(): Promise<void>;
     FetchUser(token: string): Promise<User>;
     Test(): Promise<boolean>;
+    MicrosoftLoginCallBack(): Promise<boolean>;
+    GetCurrentUser(): Promise<User | null>;
 }
