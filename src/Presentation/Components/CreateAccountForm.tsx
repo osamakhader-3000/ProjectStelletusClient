@@ -12,7 +12,7 @@ interface CreateAccountFormProps {
   redirectUrl: string;
 }
 
-const CreateAccountForm: React.FC<CreateAccountFormProps> = ({ redirectUrl }) => {
+const CreateAccountForm: React.FC<CreateAccountFormProps> = () => {
 
   const [invalidEmail, setInvalidEmail] = React.useState(false);
   const [invalidUsername, setInvalidUsername] = React.useState(false);
@@ -26,7 +26,6 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = ({ redirectUrl }) =>
 
   const errorBoxWrapperRef = useRef<HTMLDivElement>(null);
   const {userService: userService} = useContext(DependencyContext);
-  const [err,setErr] = React.useState<string|undefined>(undefined);
 
  const navigate = useNavigate();
 
@@ -85,7 +84,7 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = ({ redirectUrl }) =>
 
     var success = await userService.CreateAccount(user);
 
-
+    
     if(success){
         navigate("/emailverification", { replace: true });
     }
@@ -131,9 +130,7 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = ({ redirectUrl }) =>
                                     <p>Please insert a valid password.</p>
                                     <p>A valid password must be between 8 and 50 characters.</p>
                                 </div>}
-            {err && <div>
-                      <p>{err}</p>
-                    </div>}
+            
         </ErrorMessageBox>
         </span>
       </div>  

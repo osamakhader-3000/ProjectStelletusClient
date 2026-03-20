@@ -1,64 +1,64 @@
 import { DependencyContext } from '../../context/DependencyContext';
 import { useNavigate } from "react-router";
-import { useState,useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import PopupBackground from './PopupBackground';
 import styles from './ProfileImageMenu.module.css'
 import ProfileImageMenuItem from '../../Application/DataTransferObjects/ProfileImageMenuItem'
 
-export default function ProfileImageMenu(){
+export default function ProfileImageMenu() {
 
-  const [imgMenuItems,setImgMenuItems] = useState<ProfileImageMenuItem[]>([]);
-  const [menuVisible, setMenuVisible] = useState<boolean>(false);  
-    const {profileImgMenuService,userService: userService} = useContext(DependencyContext);
-    const navigate = useNavigate();
+  const [imgMenuItems, setImgMenuItems] = useState<ProfileImageMenuItem[]>([]);
+  const [menuVisible, setMenuVisible] = useState<boolean>(false);
+  const { profileImgMenuService, userService: userService } = useContext(DependencyContext);
+  const navigate = useNavigate();
 
-    useEffect(()=>{
-      const fetchData = async () => {
-          
-          var imageMenuItems = await profileImgMenuService.ListProfileImageMenuItems();
+  useEffect(() => {
+    const fetchData = async () => {
 
-          setImgMenuItems(imageMenuItems);
-        }
-    
-        fetchData();  
+      var imageMenuItems = await profileImgMenuService.ListProfileImageMenuItems();
 
-    },[]);
-
-    function menuItemClick(linkRef:string){
-        if(linkRef == "/logout"){
-            userService.Logout();
-            navigate('/login');
-        }
-        else
-            navigate(linkRef);
+      setImgMenuItems(imageMenuItems);
     }
 
-    function toggleList() {
-       setMenuVisible(!menuVisible);   
-    }
+    fetchData();
 
-    function backGroundClicked(){
-      setMenuVisible(false);   
-    }
+  }, []);
 
-    return(
-      <>
-     {menuVisible && <PopupBackground onClick={backGroundClicked}></PopupBackground>}
+  function menuItemClick(linkRef: string) {
+    if (linkRef == "/logout") {
+      userService.Logout();
+      navigate('/login');
+    }
+    else
+      navigate(linkRef);
+  }
+
+  function toggleList() {
+    setMenuVisible(!menuVisible);
+  }
+
+  function backGroundClicked() {
+    setMenuVisible(false);
+  }
+
+  return (
+    <>
+      {menuVisible && <PopupBackground onClick={backGroundClicked}></PopupBackground>}
       <div className={styles.profileimagemenu}>
-      <button type='button' onClick={toggleList} className={styles.userbuttonclass}>
-            <img src="/1547564589747.jfif" className={styles.userimgclass} alt=''></img>
+        <button type='button' onClick={toggleList} className={styles.userbuttonclass}>
+          <img src="/1547564589747.jfif" className={styles.userimgclass} alt=''></img>
         </button>
-     <div className={menuVisible?`${styles.profileimagemenu} ${styles.menu}`:'hide'}>
-      {imgMenuItems.map((menuItem)=>( 
-         <a key={menuItem.ID.toString()} onClick={()=>menuItemClick(menuItem.LinkRef)}>
-          <div className={styles.menuitem}>
-            {menuItem.Text}
-          </div>
-         </a>
-       ))}            
-    </div>
-   </div>
-   </>
-    )
+        <div className={menuVisible ? `${styles.profileimagemenu} ${styles.menu}` : 'hide'}>
+          {imgMenuItems.map((menuItem) => (
+            <a key={menuItem.ID.toString()} onClick={() => menuItemClick(menuItem.LinkRef)}>
+              <div className={styles.menuitem}>
+                {menuItem.Text}
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </>
+  )
 }
 

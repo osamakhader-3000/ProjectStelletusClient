@@ -1,45 +1,38 @@
 import { DependencyContext } from '../../../context/DependencyContext';
 import { useContext, useEffect, useRef, useState } from 'react';
-import {ErrorMessageBox} from '../GeneralComponents/ErrorMessageBox';
+import {NotificationMessageBox} from '../GeneralComponents/NotificationMessageBox';
 
 
-export function NotificationListener() {
+export function NotificationMessageListener() {
 
-    const [err, setErr] = useState<string | undefined>(undefined);
-    const [showError, setShowError] = useState(false);
-    const errorBoxWrapperRef = useRef<HTMLDivElement>(null);
-    const {errorHandlingBus,authEventBus} = useContext(DependencyContext);
+    const [messageText, setMessageText] = useState<string | undefined>(undefined);
+    const [showNotification, setShowNotification] = useState(false);
+    const notificationBoxWrapperRef = useRef<HTMLDivElement>(null);
+    const {notificationHandlingBus} = useContext(DependencyContext);
 
-    errorHandlingBus.Subscribe((message:string) => {
-        setErr(message);
-        setShowError(true);
+    notificationHandlingBus.Subscribe((message:string) => {
+        setMessageText(message);
+        setShowNotification(true);
     });
 
-    authEventBus.SubscribeToDenyAccess(() => {
-        
-     
-        setErr("Your session has expired. Please log in again.");
-        setShowError(true);
-    });
-
-
+   
     useEffect(() => {
-        if (!showError) return;
+        if (!showNotification) return;
     
         const onPointerDown = (e:Event) => {
           const target = e.target as Node;
     
-          if (errorBoxWrapperRef.current?.contains(target)) return;
-          setShowError(false);
+          if (notificationBoxWrapperRef.current?.contains(target)) return;
+          setShowNotification(false);
         };
     
         document.addEventListener("click", onPointerDown, true);
         return () => document.removeEventListener("click", onPointerDown, true);
-      }, [showError]);
+      }, [showNotification]);
       
     return (
-        <span ref={errorBoxWrapperRef}>
-            <ErrorMessageBox message={err} showError={showError}></ErrorMessageBox>
+        <span ref={notificationBoxWrapperRef}>
+            <NotificationMessageBox message={messageText} showNotification={showNotification}></NotificationMessageBox>
         </span>
     );
 }

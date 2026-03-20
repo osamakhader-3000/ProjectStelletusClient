@@ -7,8 +7,10 @@ import ProtectedRoute from './Presentation/Components/ProtectedRoute';
 import {DependencyProvider} from './context/DependencyContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
-import { NotificationListener } from './Presentation/Components/Listeners/NotificationListener';
+import { ErrorMessageListener } from './Presentation/Components/Listeners/ErrorMessageListener';
 import { NavigationListener } from './Presentation/Components/Listeners/NavigationListener';
+import { VerifyEmail } from './Presentation/pages/auth/verifyemail';
+import { NotificationMessageListener } from './Presentation/Components/Listeners/NotificationListener';
 
 function App() {
   
@@ -18,9 +20,11 @@ function App() {
           
             <ThemeProvider>          
               <NavigationListener />
-              <NotificationListener />
+              <NotificationMessageListener />
+              <ErrorMessageListener />
               <Routes>
                 <Route path="/callback" element={<AuthCallback />} />
+                <Route path="/verifyemail" element={<VerifyEmail />} />
                 <Route path="/login" element={<LoginPage newAccount={false} />} />
                 <Route path="/signup" element={<LoginPage newAccount={true} />} />
                 <Route index element={<Navigate to="/mytasks" replace />} />                    

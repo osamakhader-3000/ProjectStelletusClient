@@ -31,7 +31,7 @@ export class AuthApiService implements IAuthService {
       let result = await fn();      
 
       if(result && result instanceof GeneralApiResult && !result.success && result.ErrorType == 'Unauthorized')
-            authResult = await this.GetRefreshResultAsAuthResult();   
+            authResult = await this.Refresh();   
 
       if(authResult && authResult.success)
         result = await fn();
@@ -58,11 +58,11 @@ export class AuthApiService implements IAuthService {
  }
 
  async GetRefreshResultAsAuthResult(): Promise<AuthenticationResult>{
-    let loginResult = await this.SaveRefreshResponse();
+    let loginResult = await this.CallRefreshAPI();
     return this.CreateAuthResultFromApiResult(loginResult);
  }
 
- async SaveRefreshResponse(): Promise<GeneralApiResult<Date>> {
+ async CallRefreshAPI(): Promise<GeneralApiResult<Date>> {
     
        let loginResult = await this.authApi.Refresh();
         if(loginResult.data && loginResult.success)
@@ -77,17 +77,19 @@ export class AuthApiService implements IAuthService {
  
   async Refresh(): Promise<AuthenticationResult> {   
 
-        let loginResult = await this.SaveRefreshResponse();
-
-        if(!loginResult.success)
-        {
-            if(loginResult.ErrorType == 'Unauthorized')
-                this.authEventBus.UnauthorizedAccessAttempted();
-            else
-                this.errorHandlingBus.ErrorOccured(loginResult?.resultMessage ?? "Unknown error");
+        let loginResult = await this.authApi.Refresh();
+        if(loginResult.data && loginResult.success)
+        {    
+            this.SaveLoginResult(loginResult.success, loginResult.data); 
+            
         }
-        
-        return new AuthenticationResult(null,false);
+
+        /*
+        if(!result.success)        
+          this.authEventBus.UnauthorizedAccessAttempted();
+          */
+
+         return this.CreateAuthResultFromApiResult(loginResult);
 
   }
 

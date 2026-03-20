@@ -1,7 +1,6 @@
 import LoginForm from '../../Components/LoginForm.tsx';
 import CreateAccountForm from '../../Components/CreateAccountForm.tsx';
 import microsoftLogo from '../../../../public/32px-Microsoft_logo.svg.png';
-import googleLogo from '../../../../public/Googlelogo.svg.webp'
 import styles from './loginpage.module.css'
 import { useTranslations } from '../../Hooks/useTranslations.tsx';
 import { DependencyContext } from '../../../context/DependencyContext.tsx';

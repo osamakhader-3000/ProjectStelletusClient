@@ -18,7 +18,7 @@ export default function TestSecurity(){
         let resul2 = authService.CreateAccount('testuser2', 'testemail@examples.com', 'testpassword'); 
         let resul3 = authService.CreateAccount('testuser', 'testemail@example.com', 'testpassword'); 
         let resul4 = authService.Test(); */
-        debugger
+        
         let resul5 = authService.Test(); 
         setTestResult("Success");
       }}>Run Test</button>

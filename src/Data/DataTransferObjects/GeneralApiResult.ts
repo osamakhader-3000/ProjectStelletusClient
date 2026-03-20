@@ -45,10 +45,8 @@ export class GeneralApiResultFactory {
         else
             errorType = ErrorTypes.UnknownError;
 
-        return new GeneralApiResult<T>(
-                false,
-                errorType,
-                error?.response?.data?.Message ?? error?.message ?? "Unknown error",
-                null
-        );
+        const errorMessage = error?.response?.data && error.response.data !== ""? error.response.data : (error?.message ?? "Unknown error");
+
+        return new GeneralApiResult<T>(false,errorType,errorMessage,null);
+
     }}

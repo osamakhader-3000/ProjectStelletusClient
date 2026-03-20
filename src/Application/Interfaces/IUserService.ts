@@ -10,4 +10,6 @@ export interface IUserService{
     Test(): Promise<boolean>;
     MicrosoftLoginCallBack(): Promise<boolean>;
     GetCurrentUser(): Promise<User | null>;
+    VerifyEmail(token:string): Promise<boolean>;
+    ResendVerificationEmail(): Promise<boolean>;
 }

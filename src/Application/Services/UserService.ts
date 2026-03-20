@@ -1,64 +1,68 @@
 import { User } from "../../Domain/Entities/User";
 import { IUserService } from "../Interfaces/IUserService";
 import { IUserRepository } from "../Repositories/IUserRepository";
-import UserLogInStatus from "../../Domain/Entities/Authentication/UserLogInStatus";
+import UserLoginStatus from "../../Domain/Entities/Authentication/UserLogInStatus";
 
-export class UserService implements IUserService{
+export class UserService implements IUserService {
 
-    userRepository:IUserRepository;
+    userRepository: IUserRepository;
 
-    constructor(userRepository:IUserRepository){
+    constructor(userRepository: IUserRepository) {
         this.userRepository = userRepository;
-        
+
     }
 
     async Test(): Promise<boolean> {
         return this.userRepository.Test();
     }
-       
+
 
     async FetchUser(token: string): Promise<User> {
-       return this.userRepository.FetchUser(token);
+        return this.userRepository.FetchUser(token);
     }
 
-    
-   
 
-    async CreateAccount(user: User): Promise<boolean> {       
-        let result = await this.userRepository.CreateAccount(user);       
-        return result;
-        
+
+
+    async CreateAccount(user: User): Promise<boolean> {
+        let result = await this.userRepository.CreateAccount(user);
+        return result.success;
+
     }
 
-    
-    async LoginAccount(user: User): Promise<boolean> { 
+
+    async LoginAccount(user: User): Promise<boolean> {
         let loginResult = await this.userRepository.LoginAccount(user);
         return loginResult.success;
     }
 
 
-    async CheckLoggedIn(): Promise<UserLogInStatus> {        
+    async CheckLoggedIn(): Promise<UserLoginStatus> {
 
 
-        let loginExpireDateTime = this.userRepository.GetLoginExpireTime(); 
-        if( loginExpireDateTime == null){
-            return new UserLogInStatus(false,false);
+        let loginExpireDateTime = this.userRepository.GetLoginExpireTime();
+      
+        let expired = loginExpireDateTime && new Date() > loginExpireDateTime;
+
+        if (expired || loginExpireDateTime == null) {
+            let result = await this.userRepository.Refresh();
+
+            if (!result.success) {
+
+                if (expired)
+                    return new UserLoginStatus(false, true);
+                
+                if (loginExpireDateTime == null)
+                    return new UserLoginStatus(false, false);
+            }
         }
 
-        let expired = new Date() > loginExpireDateTime;
-        if(expired)    
-        {    
-           let result = await this.userRepository.Refresh();
-           if(!result.success)
-               return new UserLogInStatus(false,true);
-        }
-
-        return new UserLogInStatus(true,false); 
+        return new UserLoginStatus(true, false);
     }
 
-   
 
-    async Logout(): Promise<void> {       
+
+    async Logout(): Promise<void> {
         this.userRepository.Logout();
     }
 
@@ -70,6 +74,15 @@ export class UserService implements IUserService{
         let user = await this.userRepository.GetCurrentUser();
         return user;
     }
-    
+
+    async VerifyEmail(token: string): Promise<boolean> {
+        let result = await this.userRepository.VerifyEmail(token);
+        return result;
+    }
+
+    async ResendVerificationEmail(): Promise<boolean> {
+        let result = await this.userRepository.ResendVerificationEmail();
+        return result;
+    }
+
 }
-    

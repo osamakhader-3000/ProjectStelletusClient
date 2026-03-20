@@ -25,6 +25,7 @@ import { RelocationRepository } from '../Data/Repositories/RelocationRepository.
 import { IAuthStorage } from '../Data/LocalData/Interfaces/IAuthStorage';
 import { AuthEventBus } from '../Channels/AuthEventBus';
 import { ErrorHandlingBus } from '../Channels/ErrorHandlingBus';
+import { NotificationHandlingBus } from '../Channels/NotificationHandlingBus';
 import { AuthListener } from '../Presentation/Listeners/AuthListener.ts';
 import { AuthApiService } from '../Data/Commons/AuthApiService.ts';
 import { AuthApi } from '../Data/api/Implementation/AuthApi.ts';
@@ -34,16 +35,15 @@ const realmapi = new RealmApi();
 const realmRepo = new RealmRepository(realmapi);
 const realmServ = new RealmService(realmRepo);
 const profImgMenuRepo = new ProfileImageMenuRepository();
-const profileImgMenuServ = new ProfileImageMenuService(profImgMenuRepo);
 const taskapi = new TaskApi();
 const taskRepo = new TaskRepository(taskapi);
-const taskServ = new TaskService(taskRepo);
 const statusapi = new StatusApi();
 const statusRepo = new StatusRepository(statusapi);
-const statusServ = new StatusService(statusRepo);
+
 
 const authEventBus = new AuthEventBus();
 const errorHandlingBus = new ErrorHandlingBus();
+const notificationHandlingBus = new NotificationHandlingBus();
 
 const authStorage = new AuthStorage();
 const authApi= new AuthApi();
@@ -54,6 +54,9 @@ const userRepository = new UserRepository(userApi,authStorage,authService);
 const userServ = new UserService(userRepository);
 const navigateRepo = new RelocationRepository();
 const navigateServ = new RelocationService(navigateRepo);
+const profileImgMenuServ = new ProfileImageMenuService(profImgMenuRepo, userRepository);
+const statusServ = new StatusService(statusRepo);
+const taskServ = new TaskService(taskRepo);
 
 
 const authListener = new AuthListener(authEventBus, userServ);
@@ -71,6 +74,7 @@ interface DependencyContextType {
   authStorage:IAuthStorage;
   errorHandlingBus:ErrorHandlingBus;
   authEventBus:AuthEventBus;
+  notificationHandlingBus:NotificationHandlingBus;
 }
 
 export const DependencyContext = createContext<DependencyContextType>({
@@ -82,11 +86,12 @@ export const DependencyContext = createContext<DependencyContextType>({
   relocationService:navigateServ,
   authStorage:authStorage,
   errorHandlingBus:errorHandlingBus,
-  authEventBus:authEventBus
+  authEventBus:authEventBus,
+  notificationHandlingBus:notificationHandlingBus
 });
 
 export const DependencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,statusService:statusServ ,userService:userServ,relocationService:navigateServ,authStorage:authStorage,errorHandlingBus:errorHandlingBus,authEventBus:authEventBus}}>
+  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,statusService:statusServ ,userService:userServ,relocationService:navigateServ,authStorage:authStorage,errorHandlingBus:errorHandlingBus,authEventBus:authEventBus,notificationHandlingBus:notificationHandlingBus}}>
     {children}
   </DependencyContext.Provider>
 );

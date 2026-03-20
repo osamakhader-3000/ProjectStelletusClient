@@ -1,23 +1,25 @@
 // src/pages/auth/callback.tsx
+import { useNavigate } from 'react-router';
 import { DependencyContext } from '../../../context/DependencyContext';
-import { useContext, useEffect} from 'react';
+import { useContext, useEffect } from 'react';
 
 export default function AuthCallback() {
+    const navigate = useNavigate();
 
-    const { relocationService: relocationService,userService: userService } = useContext(DependencyContext);
-    
+    const { userService: userService } = useContext(DependencyContext);
+
     useEffect(() => {
 
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get("code");
-        userService.MicrosoftLoginCallBack();
+        async function handleMicrosoftLoginCallback() {
 
-       
+            let result = await userService.MicrosoftLoginCallBack();
+            if (result)
+                navigate("/");
 
-        
+        }
 
+        handleMicrosoftLoginCallback();
 
-      
     }, []);
 
 
@@ -28,5 +30,5 @@ export default function AuthCallback() {
         </div>
     );
 
- 
+
 }

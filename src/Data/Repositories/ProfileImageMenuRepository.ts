@@ -1,14 +1,17 @@
 import ProfileImageMenuItem from "../../Application/DataTransferObjects/ProfileImageMenuItem";
 import { IProfileImageMenu } from "../../Application/DataTransferInterfaces/IProfileImageMenu";
+import { User, UserEmailVerificationStatus } from "../../Domain/Entities/User";
 
 
 export class ProfileImageMenuRepository implements IProfileImageMenu{
 
-     async ListProfileImageMenuItems(): Promise<ProfileImageMenuItem[]> {        
+     async ListProfileImageMenuItems(user:User): Promise<ProfileImageMenuItem[]> { 
+
         const profileImageMenuItems: ProfileImageMenuItem[] = [];        
-        const profileItem = new ProfileImageMenuItem(1, "Profile", "/profile");
-        const logoutItem = new ProfileImageMenuItem(2, "Log out", "/logout");
-        profileImageMenuItems.push(profileItem, logoutItem);        
+        if(user != null && user.emailVerificationStatus == UserEmailVerificationStatus.Verified)
+            profileImageMenuItems.push(new ProfileImageMenuItem(1, "Profile", "/profile"));
+
+        profileImageMenuItems.push(new ProfileImageMenuItem(2, "Log out", "/logout"));
 
         return Promise.resolve(profileImageMenuItems);
     }
