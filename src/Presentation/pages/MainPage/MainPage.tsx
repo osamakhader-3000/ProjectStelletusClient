@@ -11,6 +11,8 @@ import { useListRealmsByName } from '../../Hooks/useListRealmsByName.tsx';
 import TestSecurity from '../../Components/TestSecurity.tsx';
 import { EmailVerifiedRoute } from '../../Routes/EmailVerifiedRoute.tsx';
 import EmailUnverifiedMessage from '../auth/EmailUnverifiedMessage.tsx';
+import Profile from '../User/Profile.tsx';
+import Users from '../AdminPages/Users.tsx';
 
 function MainPage() {
   const [realms, setRealms] = useState<Realm[]>([]);
@@ -60,10 +62,12 @@ function MainPage() {
                           <Route path="/test" element={<TestSecurity />} />
                           <Route element={<EmailVerifiedRoute />}>
                             <Route path="/mytasks" element={<TasksPage />} />
+                            <Route path="/users" element={<Users />} />
+                            <Route path="/myprofile" element={<Profile />} />
                             {realms.map((realm, index) => (
                               <Route key={index} path={`/${realm.id}`} element={<StatusesPage realmid={realm.id} />}/>
                             ))}
-                            <Route path="/task/:taskid" element={<TaskFormWrapper />} />
+                            <Route path="/task/:taskid" element={<TaskFormWrapper />} />                            
                           </Route>
                         </Routes>
                       </td>

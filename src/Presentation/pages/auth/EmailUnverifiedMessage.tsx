@@ -5,6 +5,10 @@ import { AuthContext } from '../../../context/AuthContext';
 import { useContext, useState } from 'react';
 import { UserEmailVerificationStatus } from '../../../Domain/Entities/User';
 import { DependencyContext } from '../../../context/DependencyContext';
+import GeneralStyles from '../../GeneralStyles.module.css';
+import { LoadingButton } from "../../Components/GeneralComponents/LoadingButton.tsx"
+
+
 
 export default function EmailUnverifiedMessage() {
 
@@ -12,9 +16,16 @@ export default function EmailUnverifiedMessage() {
     const { userService: userService, notificationHandlingBus: notificationHandlingBus } = useContext(DependencyContext);
 
     const [sent, setSent] = useState(false);
+    const [isLoading,setIsLoading] = useState(false);
 
     async function resendVerificationEmail() {
+
+        setIsLoading(true);
+
         let result = await userService.ResendVerificationEmail();
+
+        setIsLoading(false);
+
         if (result) {
             notificationHandlingBus.NotificationOccured("Verification email has been resent.");
             setSent(true);
@@ -37,7 +48,7 @@ export default function EmailUnverifiedMessage() {
             </div>
             <div>
                 <p>If you didn't receive the email, please check your spam folder or click the button below to resend the verification email.</p>
-                <button onClick={resendVerificationEmail} className={sent? styles.disablebutton: ''}>Resend Verification Email</button>
+                <LoadingButton label='Resend Verification Email' onClick={resendVerificationEmail} cssClass={sent? GeneralStyles.disablebutton: ''} isLoading={isLoading} />
             </div>
         </div>
     );

@@ -26,3 +26,11 @@
   .invalidOuterDivStyle{
     margin-right: 0%;
   }
+
+  .buttonStyle{
+    width: 100%;
+  }
+
+  .buttonWrap{
+    width: 50%;
+  }

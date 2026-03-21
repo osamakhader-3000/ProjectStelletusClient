@@ -25,6 +25,12 @@
     "microsoft-login-callback":"api/auth/microsoftlogincallback",
     "current-user":"api/auth/currentuser",
     "verify-email":"api/auth/verifyemailtoken",
-    "resend-verification-email":"api/auth/resendverificationemail"
+    "resend-verification-email":"api/auth/resendverificationemail",
+    "get-user-account":"api/users/account",
+    "change-password":"api/users/changepassword",
+    "list-users":"api/users/list",
+    "suspend-user":"api/users/suspend",
+    "activate-user":"api/users/activate"
+
 
 }

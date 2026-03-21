@@ -54,8 +54,9 @@ export default function RealmsMenu() {
                   <RealmsMenuItem ID="mytasks" Name="mytasks" />
                 </td>
               </tr>
-              <tr>
+              <tr className={styles.realmsmenuelement}>
                 <td>
+                  <RealmsMenuItem ID="users" Name="Users" />
                 </td>
               </tr>
               {realms.length > 0 &&

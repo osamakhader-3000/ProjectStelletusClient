@@ -12,4 +12,9 @@ export interface IUserService{
     GetCurrentUser(): Promise<User | null>;
     VerifyEmail(token:string): Promise<boolean>;
     ResendVerificationEmail(): Promise<boolean>;
+    GetCurrentUserProfile(): Promise<User>;
+    ChangePassword(oldPassword:string,newPassword:string): Promise<boolean>;
+    ListUsers():Promise<User[]>;
+    SuspendUser(userId:string): Promise<boolean>;
+    ActivateUser(userId:string): Promise<boolean>;
 }

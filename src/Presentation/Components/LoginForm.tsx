@@ -4,9 +4,10 @@ import styles from './LoginForm.module.css'
 import { DependencyContext } from '../../context/DependencyContext';
 import { ErrorMessageBox } from './GeneralComponents/ErrorMessageBox';
 import {TextBox} from './GeneralComponents/TextBox' 
-import { BasicButtonButton } from "project-manager-client-component-library";
 import { useNavigate } from "react-router";
 import { User } from "../../Domain/Entities/User";
+import { LoadingButton } from "./GeneralComponents/LoadingButton";
+
 
 interface LoginFormProps {
   redirectUrl: string;
@@ -23,6 +24,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectUrl }) => {
   const [username,setUsername] = useState('');
   const [invalidPassword,setInvalidPassword] = useState(false);
   const [password,setPassword] = useState('');
+  const [isLoading,setIsLoading] = useState(false);
 
   const errorBoxWrapperRef = useRef<HTMLDivElement>(null);
   const loginButtonWrapperRef = useRef<HTMLDivElement>(null);
@@ -64,12 +66,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectUrl }) => {
     }
 
     let user = new User('', username, '', password);
+      
+    setIsLoading(true);
 
-    let loginSuccess = await userService.LoginAccount(user); 
-    if(loginSuccess){
+    let loginSuccess = await userService.LoginAccount(user);
+    
+    setIsLoading(false);
+
+    if(loginSuccess)
       navigate(redirectUrl, { replace: true });
-    }
- 
+
   };
 
   useEffect(() => {
@@ -95,9 +101,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectUrl }) => {
         <div className={`${styles.loginformdiv}`} style={{width: '25%'}}>
 
          <TextBox placeholder="Username" value={username} onChange={usernameChanged} isValid={!invalidUsername} onUnClick={()=>{setInvalidUsername(false);}} />
-         <TextBox placeholder="Password" value={password} onChange={passwordChanged} isValid={!invalidPassword} onUnClick={()=>{setInvalidPassword(false);}} />
-          <span ref={loginButtonWrapperRef}>
-            <BasicButtonButton label="Login" onClick={login} inputButtonStyle={styles.ButtonStyle} />
+         <TextBox placeholder="Password" value={password} onChange={passwordChanged} isValid={!invalidPassword} onUnClick={()=>{setInvalidPassword(false);}} textInputType="password"/>
+          <span ref={loginButtonWrapperRef} className={styles.loginButtonWrap}>
+            <LoadingButton label="Login" onClick={login} isLoading={isLoading}/>         
           </span>
           <span ref={errorBoxWrapperRef}>
             <ErrorMessageBox message={err} showError={showError}></ErrorMessageBox>

@@ -27,3 +27,13 @@
   .invalidOuterDivStyle{
     margin-right: 0%;
   }
+
+  .loginButtonWrap
+  {
+    width: 100%;
+  }
+
+  .loginButtonWrap button
+  {
+    width: 50%;
+  }

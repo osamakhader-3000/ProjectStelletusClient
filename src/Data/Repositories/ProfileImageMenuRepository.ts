@@ -9,7 +9,7 @@ export class ProfileImageMenuRepository implements IProfileImageMenu{
 
         const profileImageMenuItems: ProfileImageMenuItem[] = [];        
         if(user != null && user.emailVerificationStatus == UserEmailVerificationStatus.Verified)
-            profileImageMenuItems.push(new ProfileImageMenuItem(1, "Profile", "/profile"));
+            profileImageMenuItems.push(new ProfileImageMenuItem(1, "My Profile", "/myprofile"));
 
         profileImageMenuItems.push(new ProfileImageMenuItem(2, "Log out", "/logout"));
 

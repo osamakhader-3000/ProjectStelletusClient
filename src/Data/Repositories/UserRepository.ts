@@ -94,7 +94,6 @@ export class UserRepository implements IUserRepository {
         if (result.data)
             this.authStorage.SetCurrentUser(result.data);
 
-
         return result?.data ?? null;
     }
 
@@ -111,4 +110,40 @@ export class UserRepository implements IUserRepository {
         return result?.success ?? false;
     }
 
+    async GetUserAccount(): Promise<User> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<User>>>(async () => {
+            return this.userApi.GetUserAccount();
+        });
+        return result.data ?? new User('', '', '', '');
+    }
+
+
+    async ChangePassword(oldPassword: string, newPassword: string): Promise<boolean> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<boolean>>>(async () => {
+            return this.userApi.ChangePassword(oldPassword, newPassword);
+        });
+        return result?.success ?? false;
+    }
+
+    async ListUsers(): Promise<User[]> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<User[]>>>(async () => {
+            return this.userApi.ListUsers();
+        });
+        return result.data??[];
+    }
+
+    async SuspendUser(userId: string): Promise<boolean> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<boolean>>>(async () => {
+            return this.userApi.SuspendUser(userId);
+        });
+        return result?.success ?? false;
+    }
+
+    async ActivateUser(userId: string): Promise<boolean> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<boolean>>>(async () => {
+            return this.userApi.ActivateUser(userId);
+        });
+       return result?.success ?? false;
+    }  
+    
 }

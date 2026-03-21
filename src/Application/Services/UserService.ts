@@ -51,7 +51,7 @@ export class UserService implements IUserService {
 
                 if (expired)
                     return new UserLoginStatus(false, true);
-                
+
                 if (loginExpireDateTime == null)
                     return new UserLoginStatus(false, false);
             }
@@ -84,5 +84,41 @@ export class UserService implements IUserService {
         let result = await this.userRepository.ResendVerificationEmail();
         return result;
     }
+
+    async GetCurrentUserProfile(): Promise<User> {
+        let currentUser = await this.GetCurrentUser();
+      
+        if (!currentUser || !currentUser.id)
+            throw new Error("User not logged in");
+        
+        let user = await this.userRepository.GetUserAccount();
+
+        return user;
+    }
+
+
+    async ChangePassword(oldPassword: string, newPassword: string): Promise<boolean> {
+       
+        let result = await this.userRepository.ChangePassword(oldPassword, newPassword);
+        return result;
+    }
+
+
+    async ListUsers(): Promise<User[]> {
+        let users = await this.userRepository.ListUsers();
+        return users;
+    }
+
+    async SuspendUser(userId: string): Promise<boolean> {
+        let result = await this.userRepository.SuspendUser(userId);
+        return result;
+    }
+
+    async ActivateUser(userId: string): Promise<boolean> {
+        let result = await this.userRepository.ActivateUser(userId);
+        return result;
+    }
+
+
 
 }

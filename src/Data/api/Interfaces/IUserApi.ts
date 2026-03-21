@@ -12,4 +12,9 @@ export interface IUserApi{
     GetCurrentUser(): Promise<GeneralApiResult<User>>;
     VerifyEmail(token: string): Promise<GeneralApiResult<boolean>>;
     ResendVerificationEmail(): Promise<GeneralApiResult<boolean>>;
+    GetUserAccount(): Promise<GeneralApiResult<User>>;
+    ChangePassword(oldPassword: string, newPassword: string): Promise<GeneralApiResult<boolean>>;
+    ListUsers():Promise<GeneralApiResult<User[]>>;
+    SuspendUser(userId: string): Promise<GeneralApiResult<boolean>>;
+    ActivateUser(userId: string): Promise<GeneralApiResult<boolean>>;
 }

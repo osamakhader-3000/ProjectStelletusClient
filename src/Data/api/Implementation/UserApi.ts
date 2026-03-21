@@ -7,6 +7,7 @@ import { GeneralApi } from './GeneralApi.ts';
 import axios from 'axios';
 import { GeneralApiResult } from '../../DataTransferObjects/GeneralApiResult.ts';
 import { TokenHolder } from '../../DataTransferObjects/TokenHolder.ts';
+import { PasswordChangeRequest } from '../../DataTransferObjects/PasswordChangeRequest.ts';
 
 export class UserApi extends GeneralApi implements IUserApi {
 
@@ -72,6 +73,40 @@ export class UserApi extends GeneralApi implements IUserApi {
     async ResendVerificationEmail(): Promise<GeneralApiResult<boolean>> {
         let url = urls['resend-verification-email'];
         let result = await this.GeneralApiCaller<boolean>('GET', url);
+        return result;
+    }
+
+    async GetUserAccount(): Promise<GeneralApiResult<User>> {
+        let url = urls['get-user-account'];
+        let result = await this.GeneralApiCaller<User>('GET', url);
+        return result;
+    }
+
+    async ChangePassword(oldPassword: string, newPassword: string): Promise<GeneralApiResult<boolean>> {
+        let url = urls['change-password'];
+        let passwordChangeRequest = new PasswordChangeRequest(oldPassword, newPassword);
+
+        let result = await this.GeneralApiCaller<boolean>('PUT', url, passwordChangeRequest);
+        return result;
+    }
+
+
+    async ListUsers(): Promise<GeneralApiResult<User[]>> {
+        let url = urls["list-users"];
+
+        let result = await this.GeneralApiCaller<User[]>('GET', url);
+        return result;
+    }
+
+    async SuspendUser(userId: string): Promise<GeneralApiResult<boolean>> {
+        let url = urls['suspend-user'] + `/${userId}`;
+        let result = await this.GeneralApiCaller<boolean>('PUT', url);
+        return result;
+    }
+
+    async ActivateUser(userId: string): Promise<GeneralApiResult<boolean>> {
+        let url = urls['activate-user'] + `/${userId}`;
+        let result = await this.GeneralApiCaller<boolean>('PUT', url);
         return result;
     }
 
