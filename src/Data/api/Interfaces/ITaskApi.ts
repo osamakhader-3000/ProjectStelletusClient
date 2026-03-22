@@ -1,11 +1,14 @@
 import Task from "../../../Domain/Entities/Task";
+import { GeneralApiResult } from "../../DataTransferObjects/GeneralApiResult";
 
 export interface ITaskApi{
-    ListTasks():Promise<Task[]>;
+    ListTasks():Promise<GeneralApiResult<Task[]>>;
 
-    SaveTask(task:Task):void;
+    UpdateTask(task:Task):Promise<GeneralApiResult<boolean>>;
 
-    GetTask(taskID:string):Promise<Task>;
+    GetTask(taskID:string):Promise<GeneralApiResult<Task>>;
 
-    DeleteTask(taskID:string):Promise<void>;
+    DeleteTask(taskID:string):Promise<GeneralApiResult<boolean>>;
+
+    CreateTask(task:Task):Promise<GeneralApiResult<boolean>>;
 }

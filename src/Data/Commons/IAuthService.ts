@@ -4,5 +4,5 @@ import { GeneralApiResult } from "../DataTransferObjects/GeneralApiResult";
 export interface IAuthService {
     Refresh(): Promise<AuthenticationResult>;
     ProtectedAccess<T>(fn: () => T): Promise<T>;
-    LoginAfter(fn: () => Promise<GeneralApiResult<Date>>): Promise<AuthenticationResult>;
+    AfterLogin(fn: () => Promise<GeneralApiResult<Date>>): Promise<AuthenticationResult>;
 }

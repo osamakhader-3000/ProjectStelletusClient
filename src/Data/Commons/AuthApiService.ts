@@ -80,7 +80,9 @@ export class AuthApiService implements IAuthService {
   }
 
 
-  async LoginAfter(fn: () => Promise<GeneralApiResult<Date>>): Promise<AuthenticationResult> {
+  async AfterLogin(fn: () => Promise<GeneralApiResult<Date>>): Promise<AuthenticationResult> {
+
+
     let loginResult = await fn();
 
     if (loginResult.data && loginResult.success) {

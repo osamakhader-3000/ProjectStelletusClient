@@ -20,7 +20,7 @@ export class TaskService implements ITaskService{
     }
 
     async SaveTask(task: Task): Promise<void> {
-        this.taskRepository.SaveTask(task);
+        this.taskRepository.UpdateTask(task);
     }
 
     async GetTask(taskID: string): Promise<Task> {

@@ -8,9 +8,15 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://localhost:7176', // your ASP.NET Core URL
+        target: 'https://localhost:443',
         changeOrigin: true,
-        secure: false,                     // allow self-signed dev cert
+        secure: false,
+        ws: true,
+      },
+      '/app': {
+        target: 'https://localhost:7158',
+        changeOrigin: true,
+        secure: false,
         ws: true,
       }
     }

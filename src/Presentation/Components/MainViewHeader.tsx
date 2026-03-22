@@ -3,7 +3,7 @@ import ProfileImageMenu from './ProfileImageMenu';
 import styles from './MainViewHeader.module.css'
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { UserEmailVerificationStatus } from "../../Domain/Entities/User";
+import { UserAccountStatus, UserEmailVerificationStatus } from "../../Domain/Entities/User";
 
 export default function MainViewHeader(){
   
@@ -11,7 +11,7 @@ export default function MainViewHeader(){
 
     return (
     <div className={styles.mainviewheader}>
-      {currentUser && currentUser.emailVerificationStatus == UserEmailVerificationStatus.Verified && (
+      {currentUser && currentUser.emailVerificationStatus == UserEmailVerificationStatus.Verified && currentUser.accountStatus == UserAccountStatus.Active && (
         <div className={styles.searchDiv}>
           <SearchBox
             innerDivStyle={styles.innerDivStyle}

@@ -6,7 +6,7 @@ import styles from './RealmsMenu.module.css'
 import { useListRealmsByName } from '../Hooks/useListRealmsByName';
 import { ErrorMessageBox } from './GeneralComponents/ErrorMessageBox';
 import { AuthContext } from '../../context/AuthContext';
-import { UserEmailVerificationStatus } from '../../Domain/Entities/User';
+import { UserAccountStatus, UserEmailVerificationStatus } from '../../Domain/Entities/User';
 
 export default function RealmsMenu() {
 
@@ -40,36 +40,37 @@ export default function RealmsMenu() {
           <h3 className={styles.realmsmenusearchlogofont}>Stelletus</h3>
         </a>
       </div>
-      {currentUser && currentUser.emailVerificationStatus == UserEmailVerificationStatus.Verified &&
-        <div className={styles.realmsmenusearch}>
-          <SearchBox placeholder="Search projects" keyUpFunc={RealmSearch} />
-        </div>}
-      {currentUser && currentUser.emailVerificationStatus == UserEmailVerificationStatus.Verified &&
-        <div className={styles.realmsmenucontainer}>
-          <table className={styles.realmsmenutable}>
-            <tbody>
-              <tr
-                className={styles.realmsmenuelement}>
-                <td>
-                  <RealmsMenuItem ID="mytasks" Name="mytasks" />
-                </td>
-              </tr>
+
+      <div className={styles.realmsmenusearch}>
+        <SearchBox placeholder="Search projects" keyUpFunc={RealmSearch} />
+      </div>
+      <div className={styles.realmsmenucontainer}>
+        <table className={styles.realmsmenutable}>
+          <tbody>
+            <tr
+              className={styles.realmsmenuelement}>
+              <td>
+                <RealmsMenuItem ID="mytasks" Name="mytasks" />
+              </td>
+            </tr>
+            {currentUser && currentUser.securityLevel >= 2 && (
               <tr className={styles.realmsmenuelement}>
                 <td>
                   <RealmsMenuItem ID="users" Name="Users" />
                 </td>
               </tr>
-              {realms.length > 0 &&
-                realms.map((realm: Realm) => (
-                  <tr key={realm.id} className={styles.realmsmenuelement}>
-                    <td>
-                      <RealmsMenuItem ID={realm.id.toString()} Name={realm.name} />
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>}
+            )}
+            {realms.length > 0 &&
+              realms.map((realm: Realm) => (
+                <tr key={realm.id} className={styles.realmsmenuelement}>
+                  <td>
+                    <RealmsMenuItem ID={realm.id.toString()} Name={realm.name} />
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
       <ErrorMessageBox message={err} showError={showError} ></ErrorMessageBox>
     </div>
   );

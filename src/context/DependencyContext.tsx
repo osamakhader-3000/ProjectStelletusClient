@@ -35,8 +35,7 @@ const realmapi = new RealmApi();
 const realmRepo = new RealmRepository(realmapi);
 const realmServ = new RealmService(realmRepo);
 const profImgMenuRepo = new ProfileImageMenuRepository();
-const taskapi = new TaskApi();
-const taskRepo = new TaskRepository(taskapi);
+
 const statusapi = new StatusApi();
 const statusRepo = new StatusRepository(statusapi);
 
@@ -52,10 +51,15 @@ const authService = new AuthApiService(authApi, authStorage, authEventBus, error
 const userApi = new UserApi();
 const userRepository = new UserRepository(userApi,authStorage,authService);
 const userServ = new UserService(userRepository);
+
 const navigateRepo = new RelocationRepository();
 const navigateServ = new RelocationService(navigateRepo);
+
 const profileImgMenuServ = new ProfileImageMenuService(profImgMenuRepo, userRepository);
 const statusServ = new StatusService(statusRepo);
+
+const taskapi = new TaskApi();
+const taskRepo = new TaskRepository(taskapi, authService);
 const taskServ = new TaskService(taskRepo);
 
 

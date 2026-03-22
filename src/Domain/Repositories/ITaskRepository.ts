@@ -1,8 +1,9 @@
 import Task from "../Entities/Task";
 
 export interface ITaskRepository{
-    GetTask(taskID:string):Promise<Task>;
+    GetTask(taskID:string):Promise<Task|null>;
     ListTasks():Promise<Task[]>;
-    DeleteTask(taskID:string):Promise<void>;   
-    SaveTask(task:Task):Promise<void>; 
+    DeleteTask(taskID:string):Promise<boolean>;   
+    UpdateTask(task:Task):Promise<boolean>; 
+    CreateTask(task:Task):Promise<boolean>;
 }

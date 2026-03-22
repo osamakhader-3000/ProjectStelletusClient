@@ -34,7 +34,7 @@ export class UserRepository implements IUserRepository {
 
         let loginReq = new LoginRequest(user.username, user.password);
 
-        return await this.authService.LoginAfter(async () => {
+        return await this.authService.AfterLogin(async () => {
             let result = await this.userApi.LoginAccount(loginReq);
             return result;
         });
@@ -42,7 +42,7 @@ export class UserRepository implements IUserRepository {
 
     async CreateAccount(user: User): Promise<AuthenticationResult> {
 
-        return await this.authService.LoginAfter(async () => {
+        return await this.authService.AfterLogin(async () => {
             let result = await this.userApi.CreateAccount(user);
             return result;
         });
@@ -74,7 +74,7 @@ export class UserRepository implements IUserRepository {
     }
 
     async MicrosoftLoginCallBack(): Promise<boolean> {
-        let result= await this.authService.LoginAfter(async () => {
+        let result= await this.authService.AfterLogin(async () => {
                 let result = await this.userApi.MicrosoftLoginCallBack();
                 return result;
         });
