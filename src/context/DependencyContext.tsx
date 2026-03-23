@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import { RealmRepository } from '../Data/Repositories/RealmRepository';
-import { RealmApi } from '../Data/api/Implementation/RealmApi';
+import { RealmStorage } from '../Data/LocalData/Implemetation/RealmStorage.ts';
 import {RealmService} from '../Application/Services/RealmService';
 import { TaskService } from '../Application/Services/TaskService';
 import { TaskRepository } from '../Data/Repositories/TaskRepository';
@@ -31,9 +31,7 @@ import { AuthApiService } from '../Data/Commons/AuthApiService.ts';
 import { AuthApi } from '../Data/api/Implementation/AuthApi.ts';
 
 
-const realmapi = new RealmApi();
-const realmRepo = new RealmRepository(realmapi);
-const realmServ = new RealmService(realmRepo);
+
 const profImgMenuRepo = new ProfileImageMenuRepository();
 
 const statusapi = new StatusApi();
@@ -51,6 +49,11 @@ const authService = new AuthApiService(authApi, authStorage, authEventBus, error
 const userApi = new UserApi();
 const userRepository = new UserRepository(userApi,authStorage,authService);
 const userServ = new UserService(userRepository);
+
+const realmstorage = new RealmStorage();
+const realmRepo = new RealmRepository(realmstorage);
+const realmServ = new RealmService(realmRepo,userRepository);
+
 
 const navigateRepo = new RelocationRepository();
 const navigateServ = new RelocationService(navigateRepo);

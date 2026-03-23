@@ -1,28 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import RealmsMenuItem from './RealmsMenuItem';
 import SearchBox from './GeneralComponents/SearchBox';
 import Realm from '../../Domain/Entities/Realm';
 import styles from './RealmsMenu.module.css'
 import { useListRealmsByName } from '../Hooks/useListRealmsByName';
-import { ErrorMessageBox } from './GeneralComponents/ErrorMessageBox';
-import { AuthContext } from '../../context/AuthContext';
-import { UserAccountStatus, UserEmailVerificationStatus } from '../../Domain/Entities/User';
+
 
 export default function RealmsMenu() {
 
   const listRealms = useListRealmsByName();
   const [_realmname, setRealmName] = useState('');
   const [realms, setData] = useState<Realm[]>([]);
-  const [err, setErr] = useState<string | undefined>(undefined);
-  const [showError, setShowError] = useState<boolean>(false);
-  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { realms: _realms, errorMessage: _err, showError } = await listRealms(_realmname);
+      const _realms = await listRealms(_realmname);
       setData(_realms);
-      setErr(_err);
-      setShowError(showError);
     };
 
     fetchData();
@@ -42,36 +35,22 @@ export default function RealmsMenu() {
       </div>
 
       <div className={styles.realmsmenusearch}>
-        <SearchBox placeholder="Search projects" keyUpFunc={RealmSearch} />
+        <SearchBox placeholder="Search" keyUpFunc={RealmSearch} />
       </div>
       <div className={styles.realmsmenucontainer}>
         <table className={styles.realmsmenutable}>
           <tbody>
-            <tr
-              className={styles.realmsmenuelement}>
-              <td>
-                <RealmsMenuItem ID="mytasks" Name="mytasks" />
-              </td>
-            </tr>
-            {currentUser && currentUser.securityLevel >= 2 && (
-              <tr className={styles.realmsmenuelement}>
-                <td>
-                  <RealmsMenuItem ID="users" Name="Users" />
-                </td>
-              </tr>
-            )}
             {realms.length > 0 &&
               realms.map((realm: Realm) => (
                 <tr key={realm.id} className={styles.realmsmenuelement}>
                   <td>
-                    <RealmsMenuItem ID={realm.id.toString()} Name={realm.name} />
+                    <RealmsMenuItem ID={realm.id} Name={realm.name} />
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
-      <ErrorMessageBox message={err} showError={showError} ></ErrorMessageBox>
     </div>
   );
 }

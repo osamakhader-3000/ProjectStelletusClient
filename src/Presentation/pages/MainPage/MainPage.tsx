@@ -1,13 +1,9 @@
-import { useState, useEffect } from 'react';
-import StatusesPage from '../../Components/StatusPage.tsx'
 import { Routes, Route, Navigate } from 'react-router';
 import RealmsMenu from '../../Components/RealmsMenu.tsx'
 import TasksPage from '../Tasks/TasksPage.tsx';
 import MainViewHeader from '../../Components/MainViewHeader.tsx';
 import AddTaskForm from '../../Components/AddTaskForm.tsx';
-import Realm from '../../../Domain/Entities/Realm.ts';
 import styles from './MainPage.module.css'
-import { useListRealmsByName } from '../../Hooks/useListRealmsByName.tsx';
 import TestSecurity from '../../Components/TestSecurity.tsx';
 import { EmailVerifiedRoute } from '../../Routes/EmailVerifiedRoute.tsx';
 import { TempAccountRoute } from '../../Routes/TempAccountRoute.tsx';
@@ -16,31 +12,13 @@ import Profile from '../User/Profile.tsx';
 import Users from '../AdminPages/Users.tsx';
 import { TempAccountMessage } from '../auth/TempAccountMessage.tsx';
 import { AdminAccountRoute } from '../../Routes/AdminAccountRoute.tsx';
+import EditTaskForm from '../../Components/EditTaskForm.tsx';
 
 function MainPage() {
-  const [realms, setRealms] = useState<Realm[]>([]);
-  const listRealms = useListRealmsByName();
-
-  useEffect(() => {
-    const fetchData = async () => {
-
-
-      const { realms: _realms, errorMessage: _err } = await listRealms('');
-      setRealms(_realms);
-
-    }
-
-    fetchData();
-
-
-  }, []);
-
-
 
   return (
     <div>
       <header>
-
 
         <table className={styles.maintable}>
           <tbody>
@@ -71,10 +49,8 @@ function MainPage() {
                                 <Route path="/users" element={<Users />} />
                               </Route>
                               <Route path="/myprofile" element={<Profile />} />
-                              {realms.map((realm, index) => (
-                                <Route key={index} path={`/${realm.id}`} element={<StatusesPage realmid={realm.id} />} />
-                              ))}
                               <Route path="/addtask" element={<AddTaskForm />} />
+                              <Route path="/task/:id" element={<EditTaskForm />} />
                             </Route>
                           </Route>
                         </Routes>

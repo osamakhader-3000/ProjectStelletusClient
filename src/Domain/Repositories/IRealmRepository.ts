@@ -1,6 +1,7 @@
 import Realm from '../Entities/Realm';
+import { User } from '../Entities/User';
 
 export interface IRealmRepository {
 
-  listRealmsByName(name:string): Promise<Realm[]>;  
+  ListRealms(name:string, user: User): Promise<Realm[]>;  
 }

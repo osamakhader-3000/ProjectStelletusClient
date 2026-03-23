@@ -19,8 +19,8 @@ export class TaskApi extends GeneralApi implements ITaskApi{
     }
 
     async GetTask(taskID: string): Promise<GeneralApiResult<Task>> {
-        let url = `${this.baseUrl}/${urls['task-get']}`;
-        let result = await this.GeneralApiCaller<Task>('GET', url, {taskID:taskID});
+        let url = `${this.baseUrl}/${urls['task-get']}/${taskID}`;
+        let result = await this.GeneralApiCaller<Task>('GET', url);
         return result;
         
     }
@@ -38,8 +38,8 @@ export class TaskApi extends GeneralApi implements ITaskApi{
     }
 
     async DeleteTask(taskID: string): Promise<GeneralApiResult<boolean>> {
-        let url = `${this.baseUrl}/${urls['task-delete']}`;
-        let result = await this.GeneralApiCaller<boolean>('DELETE', url, {taskID:taskID});
+        let url = `${this.baseUrl}/${urls['task-delete']}/${taskID}`;
+        let result = await this.GeneralApiCaller<boolean>('DELETE', url);
         return result;
     }
 

@@ -1,18 +1,17 @@
 import Realm from "../../Domain/Entities/Realm";
+import { User } from "../../Domain/Entities/User";
 import { IRealmRepository } from "../../Domain/Repositories/IRealmRepository";
-import { IRealmApi } from "../api/Interfaces/IRealmApi";
+import { IRealmStorage } from "../LocalData/Interfaces/IRealmStorage";
 
 export class RealmRepository implements IRealmRepository {
-    datasource:IRealmApi
+    datasource:IRealmStorage
 
-    constructor(datasource:IRealmApi){
+    constructor(datasource:IRealmStorage){
         this.datasource = datasource;
     }
-
-
-    listRealmsByName(name: string): Promise<Realm[]> {
-       return this.datasource.listRealmsByName(name);
-    }
-    
+   
+    ListRealms(name: string, user: User): Promise<Realm[]> {
+       return this.datasource.ListRealms(name, user);
+    }    
 
 }
