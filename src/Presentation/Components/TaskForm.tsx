@@ -1,93 +1,91 @@
-
-import { useState, useEffect,useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router';
 import { DependencyContext } from '../../context/DependencyContext';
 import Task from '../../Domain/Entities/Task';
 import styles from './TaskForm.module.css'
+import { TextBox } from './GeneralComponents/TextBox';
+import { MultiLineTextBox } from './GeneralComponents/MultiLineTextBox';
 
 interface TaskFormProps {
-  taskid: string;
-  readonly: boolean;
+  taskId?: string|null;
+  taskTitle?: string|null;
+  taskDescription?: string|null;
+  editMode?: boolean;
 }
 
 
-export default function TaskForm({ taskid }:TaskFormProps) 
-{   
+export default function TaskForm({ taskId = null, taskTitle = null, taskDescription = null, editMode: editMode = false }: TaskFormProps) {
 
-     const { taskService } = useContext(DependencyContext); 
-    const navigate = useNavigate();
+  const { taskService } = useContext(DependencyContext);
+  const navigate = useNavigate();
 
-      const [taskFormData, setTaskFormData] = useState({
-        id:taskid,
-        title: "",
-        description: ""
-      });
+  
 
-      useEffect(() => {
-        const fetchTask = async () => {
-          const isNewTask = taskid === null || taskid.length === 0 || taskid === '00000000-0000-0000-0000-000000000000';
-          let _task = new Task('00000000-0000-0000-0000-000000000000', '', '');
-          if (!isNewTask) {
-            _task = await taskService.GetTask(taskid);
+  const [title, setTitle] = useState(taskTitle ?? "");
+  const [description, setDescription] = useState(taskDescription ?? "");
+
+  useEffect(() => {
+    setTitle(taskTitle ?? "");
+    setDescription(taskDescription ?? "");
+  }, [taskTitle, taskDescription]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const handleTextAreaInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value);
+  };
+
+  const addTask = () => {
+    let _task = new Task(taskId , title, description);
+    taskService.CreateTask(_task);
+  };
+
+
+  const updateTask = () => {
+    let _task = new Task(taskId , title, description);
+    taskService.UpdateTask(_task);
+  }
+
+  const handleCancel = () => {
+    navigate('/mytasks');
+
+  }
+
+
+
+  return (
+    <div className={styles.maincontainer}>
+      <div className={styles.taskformcontainer}>
+        <div className={styles.taskformelementcontainer}>         
+         
+            <TextBox onChange={handleInputChange} value={title} placeholder="Title"></TextBox>
+        
+        </div>
+        <div className={styles.taskformelementcontainer}>
+            <MultiLineTextBox rows={20} onChange={handleTextAreaInputChange} value={description} placeholder="Description"></MultiLineTextBox>
+        </div>
+
+        <div className={`${styles.taskformelementcontainer} ${styles.taskformelementbuttoncontainer}`}>
+
+          {!editMode && <button className={`${styles.taskformbutton} ${styles.taskformokbutton}`} onClick={addTask}>
+            Add
+          </button>}
+          {editMode && <button className={`${styles.taskformbutton} ${styles.taskformokbutton}`} onClick={updateTask}>
+            Save
+          </button>
           }
-          setTaskFormData(_task);
-        };
-        fetchTask();
-      }, [taskid]);
 
-      const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setTaskFormData((prevFormData) => ({
-          ...prevFormData,
-          [name]: value,
-        }));
-      };
-    
-      const handleTextAreaInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setTaskFormData((prevFormData) => ({
-          ...prevFormData,
-          [name]: value,
-        }));
-      };
-
-      const addTask = () => {
-        taskService.SaveTask(taskFormData);
-      };
-
-      const handleCancel=()=>{
-        navigate('/realm/mytasks');
-
-      }
+          <button className={styles.taskformbutton} onClick={handleCancel}>cancel</button>
+        </div>
 
 
 
-    return (<>
-            <div className={styles.taskformcontainer}>
-                <div className={styles.taskformelementcontainer}>
-                    <div>Title:</div> 
-                    <div className={styles.formtextboxdiv}>
-                        <input type="text" className={styles.formtextbox} 
-                        onChange={handleInputChange} value={taskFormData.title} name="title"></input>
-                    </div>
-                </div>
-                <div className={styles.taskformelementcontainer}>
-                    <div>Decription:</div> 
-                    <div className={styles.formtextboxdiv}>
-                        <textarea rows={20} className={`${styles.formtextbox} ${styles.formtextarea}`} 
-                        onChange={handleTextAreaInputChange} value={taskFormData.description} name="description">
-                        </textarea>
-                    </div>
-                </div>
-                <div className={`${styles.taskformelementcontainer}} ${styles.taskformelementbuttoncontainer}`}>
-                   
-                        <button className={`${styles.taskformbutton} ${styles.taskformokbutton}`} onClick={addTask}>
-                            Add
-                        </button>
-                     
-                    <button className={styles.taskformbutton} onClick={handleCancel}>cancel</button>
-                </div>
-            </div>
-        </>)
+      </div>
+
+
+    </div>
+  )
 
 }

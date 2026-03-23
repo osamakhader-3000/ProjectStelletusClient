@@ -15,15 +15,20 @@ export class TaskService implements ITaskService{
         return this.taskRepository.ListTasks();
     }
 
-    async DeleteTask(taskID: string): Promise<void> {
-        this.taskRepository.DeleteTask(taskID);
+    async DeleteTask(taskID: string): Promise<boolean> {
+        return this.taskRepository.DeleteTask(taskID);
     }
 
-    async SaveTask(task: Task): Promise<void> {
-        this.taskRepository.UpdateTask(task);
+    async CreateTask(task: Task): Promise<boolean> {
+        return this.taskRepository.CreateTask(task);
     }
 
-    async GetTask(taskID: string): Promise<Task> {
+    async UpdateTask(task: Task): Promise<boolean> {
+        return this.taskRepository.UpdateTask(task);
+    }
+
+
+    async GetTask(taskID:string):Promise<Task|null> {
        return this.taskRepository.GetTask(taskID);
     }
 

@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from 'react-router';
 import RealmsMenu from '../../Components/RealmsMenu.tsx'
 import TasksPage from '../Tasks/TasksPage.tsx';
 import MainViewHeader from '../../Components/MainViewHeader.tsx';
-import TaskFormWrapper from '../../Components/TaskFromWrapper.tsx';
+import AddTaskForm from '../../Components/AddTaskForm.tsx';
 import Realm from '../../../Domain/Entities/Realm.ts';
 import styles from './MainPage.module.css'
 import { useListRealmsByName } from '../../Hooks/useListRealmsByName.tsx';
@@ -74,7 +74,7 @@ function MainPage() {
                               {realms.map((realm, index) => (
                                 <Route key={index} path={`/${realm.id}`} element={<StatusesPage realmid={realm.id} />} />
                               ))}
-                              <Route path="/task/:taskid" element={<TaskFormWrapper />} />
+                              <Route path="/addtask" element={<AddTaskForm />} />
                             </Route>
                           </Route>
                         </Routes>

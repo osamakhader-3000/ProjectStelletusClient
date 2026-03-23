@@ -53,14 +53,14 @@ export function TextBox({
       name="testtextbox"
       onClick={handleInsideClick}
       value={value ?? ""}
-      aria-invalid={!isValid}
+      aria-invalid={isValid === false}
       onKeyUp={(e) => keyUpFunc?.((e.target as HTMLInputElement).value)}
       onChange={onChange}
       placeholder={placeholder || ""}
       type={textInputType || "text"}
       className={`
         ${formTextBoxStyles.textbox}
-        ${!isValid ? formTextBoxStyles.invalid : ''}
+        ${isValid === false ? formTextBoxStyles.invalid : ''}
         ${textInputStyle || ''}
       `.trim()}
       ref={localRef}

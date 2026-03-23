@@ -131,6 +131,10 @@
     width: 80%;
   }
 
+  .multiline{
+    height: 20%;
+  }
+
   .textbox:focus {
     border-color: rgb(188, 108, 241); 
   }
