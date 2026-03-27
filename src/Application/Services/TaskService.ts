@@ -1,6 +1,6 @@
 import Task from "../../Domain/Entities/Task";
 import { ITaskService } from "../Interfaces/ITaskService";
-import { ITaskRepository } from "../../Domain/Repositories/ITaskRepository";
+import { ITaskRepository } from "../Repositories/ITaskRepository";
 
 
 export class TaskService implements ITaskService{

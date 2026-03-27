@@ -1,5 +1,5 @@
 import { IRealmService } from "../Interfaces/IRealmService";
-import { IRealmRepository } from "../../Domain/Repositories/IRealmRepository";
+import { IRealmRepository } from "../Repositories/IRealmRepository";
 import Realm from "../../Domain/Entities/Realm";
 import { IUserRepository } from "../Repositories/IUserRepository";
 

@@ -5,9 +5,6 @@ import {RealmService} from '../Application/Services/RealmService';
 import { TaskService } from '../Application/Services/TaskService';
 import { TaskRepository } from '../Data/Repositories/TaskRepository';
 import { TaskApi } from '../Data/api/Implementation/TaskApi';
-import { StatusApi } from '../Data/api/Implementation/StatusApi';
-import { StatusService } from '../Application/Services/StatusService';
-import { StatusRepository } from '../Data/Repositories/StatusRepository';
 import { ProfileImageMenuService } from '../Application/Services/ProfileImageMenuService';
 import { ProfileImageMenuRepository } from '../Data/Repositories/ProfileImageMenuRepository';
 import { UserService } from '../Application/Services/UserService.ts';
@@ -15,7 +12,6 @@ import { UserApi } from '../Data/api/Implementation/UserApi.ts';
 import { UserRepository } from '../Data/Repositories/UserRepository.ts';
 import { AuthStorage } from '../Data/LocalData/Implemetation/AuthStorage';
 import { IUserService } from '../Application/Interfaces/IUserService.ts';
-import { IStatusService } from '../Application/Interfaces/IStatusService';
 import { ITaskService } from '../Application/Interfaces/ITaskService';
 import { IProfileImageMenuService } from '../Application/Interfaces/IProfileImageMenuService';
 import { IRealmService } from '../Application/Interfaces/IRealmService';
@@ -33,9 +29,6 @@ import { AuthApi } from '../Data/api/Implementation/AuthApi.ts';
 
 
 const profImgMenuRepo = new ProfileImageMenuRepository();
-
-const statusapi = new StatusApi();
-const statusRepo = new StatusRepository(statusapi);
 
 
 const authEventBus = new AuthEventBus();
@@ -59,7 +52,6 @@ const navigateRepo = new RelocationRepository();
 const navigateServ = new RelocationService(navigateRepo);
 
 const profileImgMenuServ = new ProfileImageMenuService(profImgMenuRepo, userRepository);
-const statusServ = new StatusService(statusRepo);
 
 const taskapi = new TaskApi();
 const taskRepo = new TaskRepository(taskapi, authService);
@@ -75,7 +67,6 @@ interface DependencyContextType {
   realmService: IRealmService;
   profileImgMenuService: IProfileImageMenuService;
   taskService: ITaskService;
-  statusService: IStatusService;
   userService: IUserService;
   relocationService:IRelocationService;
   authStorage:IAuthStorage;
@@ -88,7 +79,6 @@ export const DependencyContext = createContext<DependencyContextType>({
   realmService: realmServ,
   profileImgMenuService:profileImgMenuServ,
   taskService:taskServ,
-  statusService:statusServ,
   userService:userServ,
   relocationService:navigateServ,
   authStorage:authStorage,
@@ -98,7 +88,7 @@ export const DependencyContext = createContext<DependencyContextType>({
 });
 
 export const DependencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,statusService:statusServ ,userService:userServ,relocationService:navigateServ,authStorage:authStorage,errorHandlingBus:errorHandlingBus,authEventBus:authEventBus,notificationHandlingBus:notificationHandlingBus}}>
+  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,userService:userServ,relocationService:navigateServ,authStorage:authStorage,errorHandlingBus:errorHandlingBus,authEventBus:authEventBus,notificationHandlingBus:notificationHandlingBus}}>
     {children}
   </DependencyContext.Provider>
 );
