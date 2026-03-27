@@ -25,6 +25,10 @@ import { NotificationHandlingBus } from '../Channels/NotificationHandlingBus';
 import { AuthListener } from '../Presentation/Listeners/AuthListener.ts';
 import { AuthApiService } from '../Data/Commons/AuthApiService.ts';
 import { AuthApi } from '../Data/api/Implementation/AuthApi.ts';
+import { BuildApi } from '../Data/api/Implementation/BuildApi.ts';
+import { BuildRepository } from '../Data/Repositories/BuildRepository.ts';
+import { BuildService } from '../Application/Services/BuildService.ts';
+import { IBuildService } from '../Application/Interfaces/IBuildService.ts';
 
 
 
@@ -57,6 +61,9 @@ const taskapi = new TaskApi();
 const taskRepo = new TaskRepository(taskapi, authService);
 const taskServ = new TaskService(taskRepo);
 
+const buildApi = new BuildApi();
+const buildRepo = new BuildRepository(buildApi, authService);
+const buildServ = new BuildService(buildRepo);
 
 const authListener = new AuthListener(authEventBus, userServ);
 authListener.StartListening();
@@ -67,6 +74,7 @@ interface DependencyContextType {
   realmService: IRealmService;
   profileImgMenuService: IProfileImageMenuService;
   taskService: ITaskService;
+  buildService: IBuildService;
   userService: IUserService;
   relocationService:IRelocationService;
   authStorage:IAuthStorage;
@@ -79,6 +87,7 @@ export const DependencyContext = createContext<DependencyContextType>({
   realmService: realmServ,
   profileImgMenuService:profileImgMenuServ,
   taskService:taskServ,
+  buildService:buildServ,
   userService:userServ,
   relocationService:navigateServ,
   authStorage:authStorage,
@@ -88,7 +97,7 @@ export const DependencyContext = createContext<DependencyContextType>({
 });
 
 export const DependencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,userService:userServ,relocationService:navigateServ,authStorage:authStorage,errorHandlingBus:errorHandlingBus,authEventBus:authEventBus,notificationHandlingBus:notificationHandlingBus}}>
+  <DependencyContext.Provider value={{ realmService: realmServ,profileImgMenuService:profileImgMenuServ,taskService:taskServ,buildService:buildServ,userService:userServ,relocationService:navigateServ,authStorage:authStorage,errorHandlingBus:errorHandlingBus,authEventBus:authEventBus,notificationHandlingBus:notificationHandlingBus}}>
     {children}
   </DependencyContext.Provider>
 );

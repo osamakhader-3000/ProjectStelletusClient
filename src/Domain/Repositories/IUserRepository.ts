@@ -1,3 +1,4 @@
+/*
 import { User } from '../Entities/User';
 
 export interface IUserRepository {
@@ -6,4 +7,4 @@ export interface IUserRepository {
   CheckLoggedIn(): Promise<boolean>;
   Logout(): Promise<void>;
   FetchUser(token: string): Promise<User>;
-}
+}*/

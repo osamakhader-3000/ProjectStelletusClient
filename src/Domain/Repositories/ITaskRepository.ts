@@ -1,3 +1,4 @@
+/*
 import Task from "../Entities/Task";
 
 export interface ITaskRepository{
@@ -6,4 +7,4 @@ export interface ITaskRepository{
     DeleteTask(taskID:string):Promise<boolean>;   
     UpdateTask(task:Task):Promise<boolean>; 
     CreateTask(task:Task):Promise<boolean>;
-}
+}*/

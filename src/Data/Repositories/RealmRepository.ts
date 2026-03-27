@@ -1,6 +1,6 @@
 import Realm from "../../Domain/Entities/Realm";
 import { User } from "../../Domain/Entities/User";
-import { IRealmRepository } from "../../Domain/Repositories/IRealmRepository";
+import { IRealmRepository } from "../../Application/Repositories/IRealmRepository";
 import { IRealmStorage } from "../LocalData/Interfaces/IRealmStorage";
 
 export class RealmRepository implements IRealmRepository {

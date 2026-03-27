@@ -4,14 +4,17 @@ import style from './CssStyles/CubesBuildForm.module.css';
 import { LoadingButton } from '../GeneralComponents/LoadingButton';
 import { useNavigate } from 'react-router';
 import { DependencyContext } from '../../../context/DependencyContext';
+import Build from '../../../Domain/Entities/Build';
 
 export function CubesBuildForm() {
 
-    const { taskService, notificationHandlingBus, errorHandlingBus } = useContext(DependencyContext);
+    const { buildService, notificationHandlingBus, errorHandlingBus } = useContext(DependencyContext);
     const navigate = useNavigate();
 
     const [clients, setClients] = useState([{ id: 0, name: '' }]);
     const [isSaving, setIsSaving] = useState(false);
+    const [version, setVersion] = useState('');
+    const [link, setLink] = useState('');
 
     function addClientAfter(afterId: number) {
         setClients(prev => {
@@ -32,12 +35,47 @@ export function CubesBuildForm() {
     }
 
     function handleCancel() {
-        // Implement cancel logic, e.g., navigate back or clear form
-        navigate(-1); // Navigate back to the previous page
+        navigate('/builds');
     }
 
-    function addBuild() {
-        // Implement add build logic, e.g., validate input and send data to backend
+    function validateBuild(): boolean {
+
+        if (version == null || version.trim() == '') {
+            errorHandlingBus.ErrorOccured('The build version or number is required');
+            return false;
+        }
+
+        if (version.length > 100) {
+            errorHandlingBus.ErrorOccured('Maximum length for the build version or number is 100 characters');
+            return false;
+        }
+
+        if (link.length > 2000) {
+            errorHandlingBus.ErrorOccured('Maximum length for the build link is 2000 characters');
+            return false;
+        }
+
+        return true;
+    }
+
+    async function addBuild() {
+
+        if (!validateBuild())
+            return;
+
+        let cubesBuild = new Build('', version, link, clients.map(c => c.name));
+
+        setIsSaving(true);
+
+        let result = await buildService.createBuild(cubesBuild);
+
+        setIsSaving(false);
+
+        if (result) {
+            notificationHandlingBus.NotificationOccured('Build added successfully');
+            navigate('/builds');
+        }
+
     }
 
     return (
@@ -45,10 +83,10 @@ export function CubesBuildForm() {
             <div className={style.formcontainer}>
                 <h2>Cubes Build Form</h2>
                 <div className={style.elementcontainer}>
-                    <TextBox placeholder="Version or number" />
+                    <TextBox placeholder="Version or number" value={version} onChange={e => setVersion(e.target.value)} />
                 </div>
                 <div className={style.elementcontainer}>
-                    <TextBox placeholder="Link of the build" />
+                    <TextBox placeholder="Link of the build" value={link} onChange={e => setLink(e.target.value)} />
                 </div>
                 <br /><br />
                 <p>Clients has the build:</p>

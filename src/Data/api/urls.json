@@ -31,7 +31,8 @@
     "change-password":"api/users/changepassword",
     "list-users":"api/users/list",
     "suspend-user":"api/users/suspend",
-    "activate-user":"api/users/activate"
+    "activate-user":"api/users/activate",
+    "build-create":"api/build/create"
 
 
 }

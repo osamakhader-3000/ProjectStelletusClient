@@ -1,5 +1,5 @@
 import Task from "../../Domain/Entities/Task";
-import { ITaskRepository } from "../../Domain/Repositories/ITaskRepository";
+import { ITaskRepository } from "../../Application/Repositories/ITaskRepository";
 import { ITaskApi } from "../api/Interfaces/ITaskApi";
 import { IAuthService } from "../Commons/IAuthService";
 import { GeneralApiResult } from "../DataTransferObjects/GeneralApiResult";

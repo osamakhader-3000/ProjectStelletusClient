@@ -1,3 +1,4 @@
+/*
 export class MessageInfo {     
     message: string;
     hasError: boolean = false;
@@ -5,4 +6,4 @@ export class MessageInfo {
         this.message = message;
         this.hasError = hasError;   
     }
-}
+}*/
