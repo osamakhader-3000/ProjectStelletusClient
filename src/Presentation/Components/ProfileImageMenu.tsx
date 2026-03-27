@@ -50,7 +50,7 @@ export default function ProfileImageMenu() {
         </button>
         <div className={menuVisible ? `${styles.profileimagemenu} ${styles.menu}` : 'hide'}>
           {imgMenuItems.map((menuItem) => (
-            <a key={menuItem.ID.toString()} onClick={() => menuItemClick(menuItem.LinkRef)}>
+            <a key={menuItem.ID.toString()} onClick={() => { setMenuVisible(false); menuItemClick(menuItem.LinkRef); }}>
               <div className={styles.menuitem}>
                 {menuItem.Text}
               </div>

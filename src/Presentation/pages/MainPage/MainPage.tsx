@@ -13,6 +13,7 @@ import Users from '../AdminPages/Users.tsx';
 import { TempAccountMessage } from '../auth/TempAccountMessage.tsx';
 import { AdminAccountRoute } from '../../Routes/AdminAccountRoute.tsx';
 import EditTaskForm from '../../Components/EditTaskForm.tsx';
+import { CubesBuildForm } from '../../Components/CubesBuild/CubesBuildForm.tsx';
 
 function MainPage() {
 
@@ -51,6 +52,7 @@ function MainPage() {
                               <Route path="/myprofile" element={<Profile />} />
                               <Route path="/addtask" element={<AddTaskForm />} />
                               <Route path="/task/:id" element={<EditTaskForm />} />
+                              <Route path="/cubesbuild" element={<CubesBuildForm />} />
                             </Route>
                           </Route>
                         </Routes>
