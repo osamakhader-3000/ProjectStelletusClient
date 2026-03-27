@@ -44,17 +44,7 @@ export function CubesBuildForm() {
             errorHandlingBus.ErrorOccured('The build version or number is required');
             return false;
         }
-
-        if (version.length > 100) {
-            errorHandlingBus.ErrorOccured('Maximum length for the build version or number is 100 characters');
-            return false;
-        }
-
-        if (link.length > 2000) {
-            errorHandlingBus.ErrorOccured('Maximum length for the build link is 2000 characters');
-            return false;
-        }
-
+        
         return true;
     }
 
@@ -83,17 +73,17 @@ export function CubesBuildForm() {
             <div className={style.formcontainer}>
                 <h2>Cubes Build Form</h2>
                 <div className={style.elementcontainer}>
-                    <TextBox placeholder="Version or number" value={version} onChange={e => setVersion(e.target.value)} />
+                    <TextBox maxLength={100} placeholder="Version or number" value={version} onChange={e => setVersion(e.target.value)} />
                 </div>
                 <div className={style.elementcontainer}>
-                    <TextBox placeholder="Link of the build" value={link} onChange={e => setLink(e.target.value)} />
+                    <TextBox maxLength={2000} placeholder="Link of the build" value={link} onChange={e => setLink(e.target.value)} />
                 </div>
                 <br /><br />
                 <p>Clients has the build:</p>
                 <div className={`${style.elementcontainer} ${style.clientContainer}`}>
                     {clients.map(client => (
                         <div key={client.id} className={style.clientInnerContainer}>
-                            <TextBox value={client.name} onChange={e => updateClientName(client.id, e.target.value)} />
+                            <TextBox maxLength={100} value={client.name} onChange={e => updateClientName(client.id, e.target.value)} />
                             <button onClick={() => addClientAfter(client.id)}>+</button>
                             <button className={clients.length > 1 ? '' : style.hidden} onClick={() => removeClient(client.id)}>-</button>
                         </div>
