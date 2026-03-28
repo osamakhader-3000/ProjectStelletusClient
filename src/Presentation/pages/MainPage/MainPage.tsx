@@ -4,7 +4,6 @@ import TasksPage from '../Tasks/TasksPage.tsx';
 import MainViewHeader from '../../Components/MainViewHeader.tsx';
 import AddTaskForm from '../../Components/AddTaskForm.tsx';
 import styles from './MainPage.module.css'
-import TestSecurity from '../../Components/TestSecurity.tsx';
 import { EmailVerifiedRoute } from '../../Routes/EmailVerifiedRoute.tsx';
 import { TempAccountRoute } from '../../Routes/TempAccountRoute.tsx';
 import EmailUnverifiedMessage from '../auth/EmailUnverifiedMessage.tsx';
@@ -44,7 +43,6 @@ function MainPage() {
                           <Route path="/emailverification" element={<EmailUnverifiedMessage />} />
                           <Route path="/tempaccount" element={<TempAccountMessage />} />
                           <Route path="/" element={<Navigate to="/mytasks" replace />} />
-                          <Route path="/test" element={<TestSecurity />} />
                           <Route element={<EmailVerifiedRoute />}>
                             <Route element={<TempAccountRoute />}>
                               <Route path="/mytasks" element={<TasksPage />} />
