@@ -6,15 +6,21 @@ import { useNavigate } from 'react-router';
 import { DependencyContext } from '../../../context/DependencyContext';
 import Build from '../../../Domain/Entities/Build';
 
-export function CubesBuildForm() {
+
+interface CubesBuildFormProps {
+    build?: Build | null;
+    editMode?: boolean;
+}
+
+export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
 
     const { buildService, notificationHandlingBus, errorHandlingBus } = useContext(DependencyContext);
     const navigate = useNavigate();
 
-    const [clients, setClients] = useState([{ id: 0, name: '' }]);
+    const [clients, setClients] = useState(build?.clients?.map((name, index) => ({ id: index, name })) ?? [{ id: 0, name: '' }]);
     const [isSaving, setIsSaving] = useState(false);
-    const [version, setVersion] = useState('');
-    const [link, setLink] = useState('');
+    const [version, setVersion] = useState(build?.version ?? '');
+    const [link, setLink] = useState(build?.link ?? '');
 
     function addClientAfter(afterId: number) {
         setClients(prev => {
@@ -53,7 +59,7 @@ export function CubesBuildForm() {
         if (!validateBuild())
             return;
 
-        let cubesBuild = new Build('', version, link, clients.map(c => c.name));
+        let cubesBuild = new Build(null, version, link, clients.map(c => c.name));
 
         setIsSaving(true);
 
@@ -68,10 +74,35 @@ export function CubesBuildForm() {
 
     }
 
+
+    async function editBuild() {
+
+        if (!validateBuild())
+            return;
+
+        if (!build) {
+            errorHandlingBus.ErrorOccured('Build data is missing');
+            return;
+        }
+
+        let cubesBuild = new Build(build.id, version, link, clients.map(c => c.name));
+
+        setIsSaving(true);
+
+        let result = await buildService.updateBuild(cubesBuild);
+        
+        setIsSaving(false);
+
+        if (result) 
+            notificationHandlingBus.NotificationOccured('Build updated successfully');
+        
+    }
+
+
     return (
         <div className={style.maincontainer}>
             <div className={style.formcontainer}>
-                <h2>Cubes Build Form</h2>
+                {editMode ? <h2>Edit Cubes Build</h2> : <h2>Add Cubes Build</h2>}
                 <div className={style.elementcontainer}>
                     <TextBox maxLength={100} placeholder="Version or number" value={version} onChange={e => setVersion(e.target.value)} />
                 </div>
@@ -91,7 +122,9 @@ export function CubesBuildForm() {
                 </div>
                 <div className={`${style.elementcontainer} ${style.elementbuttoncontainer}`}>
 
-                    <LoadingButton cssClass={`${style.formbutton} ${style.formokbutton}`} onClick={addBuild} label='Add' isLoading={isSaving} />
+                    {editMode ? <LoadingButton cssClass={`${style.formbutton} ${style.formokbutton}`} onClick={editBuild} label='Save' isLoading={isSaving} />
+                     :  <LoadingButton cssClass={`${style.formbutton} ${style.formokbutton}`} onClick={addBuild} label='Add' isLoading={isSaving} />}
+                    
 
                     <button className={style.formbutton} onClick={handleCancel}>Cancel</button>
                 </div>

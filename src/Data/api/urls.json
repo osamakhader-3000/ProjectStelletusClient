@@ -32,7 +32,9 @@
     "list-users":"api/users/list",
     "suspend-user":"api/users/suspend",
     "activate-user":"api/users/activate",
-    "build-create":"api/build/create"
+    "build-create":"api/builds/create",
+    "build-get":"api/builds/get",
+    "build-update":"api/builds/update"
 
 
 }

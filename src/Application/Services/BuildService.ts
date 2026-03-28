@@ -9,6 +9,18 @@ export class BuildService implements IBuildService {
     constructor(buildRepository: IBuildRepository) {
         this.buildRepository = buildRepository;
     }
+    getBuild(buildId: string): Promise<Build> {
+        return this.buildRepository.getBuild(buildId);
+    }
+    updateBuild(build: Build): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    deleteBuild(buildId: string): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+    listBuilds(): Promise<Build[]> {
+        throw new Error("Method not implemented.");
+    }
 
     createBuild(build: Build): Promise<boolean> {
         return this.buildRepository.createBuild(build);
