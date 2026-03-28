@@ -17,7 +17,8 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
     const { buildService, notificationHandlingBus, errorHandlingBus } = useContext(DependencyContext);
     const navigate = useNavigate();
 
-    const [clients, setClients] = useState(build?.clients?.map((name, index) => ({ id: index, name })) ?? [{ id: 0, name: '' }]);
+    const mapped = build?.clients?.map((name, index) => ({ id: index, name }));
+    const [clients, setClients] = useState(mapped?.length ? mapped : [{ id: 0, name: '' }]);
     const [isSaving, setIsSaving] = useState(false);
     const [version, setVersion] = useState(build?.version ?? '');
     const [link, setLink] = useState(build?.link ?? '');

@@ -34,7 +34,9 @@
     "activate-user":"api/users/activate",
     "build-create":"api/builds/create",
     "build-get":"api/builds/get",
-    "build-update":"api/builds/update"
+    "build-update":"api/builds/update",
+    "build-delete":"api/builds/delete",
+    "build-list":"api/builds/list"
 
 
 }

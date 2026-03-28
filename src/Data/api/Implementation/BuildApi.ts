@@ -23,10 +23,14 @@ export class BuildApi extends GeneralApi implements IBuildApi {
         return result;
     }
     async deleteBuild(buildId: string): Promise<GeneralApiResult<boolean>> {
-        throw new Error("Method not implemented.");
+        let url = `${this.baseUrl}/${urls['build-delete']}/${buildId}`;
+        let result = await this.GeneralApiCaller<boolean>('DELETE', url);
+        return result;
     }
     async listBuilds(): Promise<GeneralApiResult<Build[]>> {
-        throw new Error("Method not implemented.");
+        let url = `${this.baseUrl}/${urls['build-list']}`;
+        let result = await this.GeneralApiCaller<Build[]>('GET', url);
+        return result;
     }
 
     async createBuild(build: Build): Promise<GeneralApiResult<boolean>> {
