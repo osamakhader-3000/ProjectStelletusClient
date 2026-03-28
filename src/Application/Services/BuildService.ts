@@ -13,13 +13,13 @@ export class BuildService implements IBuildService {
         return this.buildRepository.getBuild(buildId);
     }
     updateBuild(build: Build): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        return this.buildRepository.updateBuild(build);
     }
     deleteBuild(buildId: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+        return this.buildRepository.deleteBuild(buildId);
     }
     listBuilds(): Promise<Build[]> {
-        throw new Error("Method not implemented.");
+        return this.buildRepository.listBuilds();
     }
 
     createBuild(build: Build): Promise<boolean> {

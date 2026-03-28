@@ -59,7 +59,7 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
         if (!validateBuild())
             return;
 
-        let cubesBuild = new Build(null, version, link, clients.map(c => c.name));
+        let cubesBuild = new Build(null, version, link, clients.map(c => c.name.trim()).filter(name => name !== ''));
 
         setIsSaving(true);
 
@@ -85,7 +85,7 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
             return;
         }
 
-        let cubesBuild = new Build(build.id, version, link, clients.map(c => c.name));
+        let cubesBuild = new Build(build.id, version, link, clients.map(c => c.name.trim()).filter(name => name !== ''));
 
         setIsSaving(true);
 
