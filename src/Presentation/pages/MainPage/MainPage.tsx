@@ -15,6 +15,7 @@ import EditTaskForm from '../../Components/EditTaskForm.tsx';
 import AddCubesBuild from '../../Components/CubesBuild/AddCubesBuild.tsx';
 import EditCubesBuild from '../../Components/CubesBuild/EditCubesBuild.tsx';
 import Builds from '../Builds/Builds.tsx';
+import { TechnicalSupportAccountRoute } from '../../Routes/TechnicalSupportAccountRoute.tsx';
 
 function MainPage() {
 
@@ -52,9 +53,11 @@ function MainPage() {
                               <Route path="/myprofile" element={<Profile />} />
                               <Route path="/addtask" element={<AddTaskForm />} />
                               <Route path="/task/:id" element={<EditTaskForm />} />
-                              <Route path="/addcubesbuild" element={<AddCubesBuild />} />
-                              <Route path="/editcubesbuild/:id" element={<EditCubesBuild />} />
-                              <Route path="/builds" element={<Builds />} />
+                              <Route element={<TechnicalSupportAccountRoute />}>
+                                <Route path="/addcubesbuild" element={<AddCubesBuild />} />
+                                <Route path="/editcubesbuild/:id" element={<EditCubesBuild />} />
+                                <Route path="/builds" element={<Builds />} />
+                              </Route>
                             </Route>
                           </Route>
                         </Routes>
