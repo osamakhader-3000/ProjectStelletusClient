@@ -6,19 +6,19 @@ export class User {
     password: string | null;
     accountStatus: UserAccountStatus;
     emailVerificationStatus: UserEmailVerificationStatus;
-    securityLevel: number;
+    userRole: UserRole;
     localAccount: boolean;
 
 
 
-    constructor(id: string|null , username: string | null = null, email: string, password: string | null = null, accountStatus: UserAccountStatus = UserAccountStatus.Temporary, emailVerificationStatus: UserEmailVerificationStatus = UserEmailVerificationStatus.Unverified, securityLevel: number=1, localAccount: boolean=true) {
+    constructor(id: string|null , username: string | null = null, email: string, password: string | null = null, accountStatus: UserAccountStatus = UserAccountStatus.Temporary, emailVerificationStatus: UserEmailVerificationStatus = UserEmailVerificationStatus.Unverified, userRole: UserRole=UserRole.Employee, localAccount: boolean=true) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.accountStatus = accountStatus;
         this.emailVerificationStatus = emailVerificationStatus;
-        this.securityLevel = securityLevel;
+        this.userRole = userRole;
         this.localAccount = localAccount;
     }
 }
@@ -36,4 +36,11 @@ export enum UserEmailVerificationStatus
 {
     Unverified,
     Verified
+}
+
+export enum UserRole
+{
+    Employee = 1,
+    TechnicalSupport = 2,
+    Administrator = 3
 }
