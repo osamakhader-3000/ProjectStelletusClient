@@ -14,19 +14,19 @@ export default function Profile() {
     const [duplicatePasswordError, setDuplicatePasswordError] = useState(false);
     const [invalidNewPasswordError, setInvalidNewPasswordError] = useState(false);
     const [showError, setShowError] = useState(false);
-    const [isPasswordChanging,setIsPasswordChanging] = useState(false);
+    const [isPasswordChanging, setIsPasswordChanging] = useState(false);
     const [loading, setLoading] = useState(true);
 
     const errorBoxWrapperRef = useRef<HTMLDivElement>(null);
-    const { userService: userService,notificationHandlingBus } = useContext(DependencyContext);
+    const { userService: userService, notificationHandlingBus } = useContext(DependencyContext);
     const [user, setUser] = useState({
         id: '',
         username: '',
         email: '',
-        securityLevel: 1,
+        userRole: 1,
         localAccount: true
     });
-    
+
     useEffect(() => {
 
         async function fetchUser() {
@@ -36,7 +36,7 @@ export default function Profile() {
                     id: result.id ?? '',
                     username: result.username ?? '',
                     email: result.email,
-                    securityLevel: result.securityLevel,
+                    userRole: result.userRole,
                     localAccount: result.localAccount
 
                 });
@@ -110,14 +110,18 @@ export default function Profile() {
 
         setIsPasswordChanging(false);
 
-        if (result) 
-            notificationHandlingBus.NotificationOccured("Password changed successfully.");       
+        if (result)
+            notificationHandlingBus.NotificationOccured("Password changed successfully.");
 
     }
 
 
 
-    if (loading) return <p>Please wait...</p>;
+    if (loading) return (
+        <div >
+            <p>Please wait...</p>
+        </div>
+    );
 
     return (
 
@@ -144,7 +148,7 @@ export default function Profile() {
                         <br />
                         <br />
                         <span ref={errorBoxWrapperRef}>
-                            <LoadingButton label="Change Password" onClick={changePassword} cssClass={style.ButtonStyle} isLoading={ isPasswordChanging }/>
+                            <LoadingButton label="Change Password" onClick={changePassword} cssClass={style.ButtonStyle} isLoading={isPasswordChanging} />
                             <ErrorMessageBox showError={showError}>
                                 {invalidNewPasswordError && <div>
                                     <p>Please insert a valid password.</p>
