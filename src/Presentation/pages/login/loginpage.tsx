@@ -33,7 +33,7 @@ export default function LoginPage({newAccount}:LoginPageProps) {
     <div className={styles.loginroot}>
       <div className={styles.container}>
         <div className={styles.logodiv}>
-          <h3>Stelletus</h3>
+          <h3>Steletus</h3>
           <h4>Your business organizer</h4>
         </div>
         <div className={styles.middle}>

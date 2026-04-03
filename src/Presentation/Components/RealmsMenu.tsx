@@ -30,7 +30,7 @@ export default function RealmsMenu() {
     <div>
       <div className={styles.homebutton}>
         <a tabIndex={0} href="/" className={styles.homebuttonlink}>
-          <h3 className={styles.realmsmenusearchlogofont}>Stelletus</h3>
+          <h3 className={styles.realmsmenusearchlogofont}>Steletus</h3>
         </a>
       </div>
 
