@@ -35,7 +35,9 @@ export default function RealmsMenu() {
       </div>
 
       <div className={styles.realmsmenusearch}>
-        <SearchBox placeholder="Search" keyUpFunc={RealmSearch} />
+        {realms.length > 0 &&
+          <SearchBox placeholder="Search" keyUpFunc={RealmSearch} />
+        }
       </div>
       <div className={styles.realmsmenucontainer}>
         <table className={styles.realmsmenutable}>
