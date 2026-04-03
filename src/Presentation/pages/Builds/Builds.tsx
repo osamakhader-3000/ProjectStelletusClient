@@ -118,8 +118,8 @@ export default function Builds() {
                                     </button>
                                 </span>
                             }
-                            <span style={{ flex: 1, textAlign: "center", marginLeft: "10%", marginRight: "10%" }}>{build.version}</span>
-                            <p>{build.link}</p>
+                            <span className={styles.buildversion}>{build.version}</span>
+                            <a rel="noopener noreferrer" target="_blank" className={styles.buildlink} href={build.link && !/^https?:\/\//i.test(build.link) ? `https://${build.link}` : build.link}><p>{build.link}</p></a>
                             {build.clients && build.clients.length > 0 && <div className={styles.clientscontainer}>
                                 {build.clients.map((client) => (
                                     <span key={client} className={styles.client}>{client}</span>
