@@ -1,6 +1,7 @@
 import { useContext,useState,useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { DependencyContext } from '../../context/DependencyContext';
+import generalstyles from '../../Presentation/GeneralStyles.module.css';
 
 const ProtectedRoute = () => {
 
@@ -36,7 +37,12 @@ const ProtectedRoute = () => {
     
     // Show loading state while checking authentication  
     if (isLoggedIn === null) {
-      return <div>Loading...</div>;
+      return (
+      <div className={generalstyles.container}>
+        <p>Loading the application...</p>
+        <p>Please wait while we verify your authentication status.</p>
+      </div>
+    );
     }
 
   return isLoggedIn ?<Outlet />: <Navigate to="/login" replace state={{ from: location }}/>;

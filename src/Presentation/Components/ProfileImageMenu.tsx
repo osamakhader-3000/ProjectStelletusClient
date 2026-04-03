@@ -4,6 +4,7 @@ import { useState, useContext, useEffect } from 'react';
 import PopupBackground from './PopupBackground';
 import styles from './ProfileImageMenu.module.css'
 import ProfileImageMenuItem from '../../Application/DataTransferObjects/ProfileImageMenuItem'
+import steletusLogo from '../../Assets/Icons/steletuslogo.png'
 
 export default function ProfileImageMenu() {
 
@@ -46,7 +47,7 @@ export default function ProfileImageMenu() {
       {menuVisible && <PopupBackground onClick={backGroundClicked}></PopupBackground>}
       <div className={styles.profileimagemenu}>
         <button type='button' onClick={toggleList} className={styles.userbuttonclass}>
-          <img src="/1547564589747.jfif" className={styles.userimgclass} alt=''></img>
+          <img src={steletusLogo} className={styles.userimgclass} alt=''></img>
         </button>
         <div className={menuVisible ? `${styles.profileimagemenu} ${styles.menu}` : 'hide'}>
           {imgMenuItems.map((menuItem) => (
