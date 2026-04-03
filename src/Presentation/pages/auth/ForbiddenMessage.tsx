@@ -1,17 +1,8 @@
-import { useContext } from "react";
-import { AuthContext } from "../../../context/AuthContext";
-import { Navigate } from "react-router";
+import styles from '../../GeneralStyles.module.css';
 
 export function ForbiddenMessage() {
-
-    const { currentUser } = useContext(AuthContext);
-
-    if (currentUser && currentUser.securityLevel >= 2) {
-        return <Navigate to="/" replace />;
-    }
-
     return (
-        <div>
+        <div className={styles.container}>
             <h2>Forbidden</h2>
             <p>You do not have permission to access this page.</p>
         </div>

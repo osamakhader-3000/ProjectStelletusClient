@@ -16,6 +16,7 @@ import AddCubesBuild from '../../Components/CubesBuild/AddCubesBuild.tsx';
 import EditCubesBuild from '../../Components/CubesBuild/EditCubesBuild.tsx';
 import Builds from '../Builds/Builds.tsx';
 import { TechnicalSupportAccountRoute } from '../../Routes/TechnicalSupportAccountRoute.tsx';
+import { ForbiddenMessage } from '../auth/ForbiddenMessage.tsx';
 
 function MainPage() {
 
@@ -43,6 +44,7 @@ function MainPage() {
                         <Routes>
                           <Route path="/emailverification" element={<EmailUnverifiedMessage />} />
                           <Route path="/tempaccount" element={<TempAccountMessage />} />
+                          <Route path="/forbidden" element={<ForbiddenMessage />} />
                           <Route path="/" element={<Navigate to="/mytasks" replace />} />
                           <Route element={<EmailVerifiedRoute />}>
                             <Route element={<TempAccountRoute />}>

@@ -1,6 +1,9 @@
 import { useContext, useEffect } from "react";
 import { DependencyContext } from "../../../context/DependencyContext";
 import { useNavigate } from "react-router";
+import styles from '../../GeneralStyles.module.css';
+
+
 export function VerifyEmail() {
 
 const { userService: userService, notificationHandlingBus: notificationHandlingBus } = useContext(DependencyContext);
@@ -25,7 +28,7 @@ const navigate = useNavigate();
   }, []);
 
     return (
-        <div>
+        <div className={styles.container}>
             <h2>Please wait while we verify your email...</h2>
         </div>
     );

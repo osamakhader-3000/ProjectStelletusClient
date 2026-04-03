@@ -1,6 +1,5 @@
-
+import styles from '../../GeneralStyles.module.css';
 import { Navigate } from 'react-router';
-import styles from './CssStyles/EmailUnverifiedMessage.module.css';
 import { AuthContext } from '../../../context/AuthContext';
 import { useContext, useState } from 'react';
 import { UserEmailVerificationStatus } from '../../../Domain/Entities/User';

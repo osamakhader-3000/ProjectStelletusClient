@@ -1,7 +1,8 @@
-// src/pages/auth/callback.tsx
+
 import { useNavigate } from 'react-router';
 import { DependencyContext } from '../../../context/DependencyContext';
 import { useContext, useEffect } from 'react';
+import styles from '../../GeneralStyles.module.css';
 
 export default function AuthCallback() {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function AuthCallback() {
 
 
     return (
-        <div>
+        <div className={styles.container}>
             <h2>Processing authentication...</h2>
             <p>Please wait while we log you in.</p>
         </div>
