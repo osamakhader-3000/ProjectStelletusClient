@@ -1,13 +1,27 @@
-import  SearchBox  from "./GeneralComponents/SearchBox";
 import ProfileImageMenu from './ProfileImageMenu';
 import styles from './MainViewHeader.module.css'
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import { UserAccountStatus, UserEmailVerificationStatus } from "../../Domain/Entities/User";
+import { useContext, useEffect, useState } from "react";
+import { User, UserAccountStatus, UserEmailVerificationStatus } from "../../Domain/Entities/User";
+import { DependencyContext } from '../../context/DependencyContext';
 
 export default function MainViewHeader(){
   
-   const { currentUser } = useContext(AuthContext);
+   const { userService } = useContext(DependencyContext);
+   const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+   useEffect(() => {
+
+      const fetchCurrentUser = async () => {
+        const result = await userService.GetCurrentUserProfile();
+        if (result) {
+          setCurrentUser(result);
+
+        }
+      };
+
+      fetchCurrentUser();
+
+  }, []);
 
     return (
     <div className={styles.mainviewheader}>
@@ -22,6 +36,11 @@ export default function MainViewHeader(){
           */}
         </div>
       )}
-      <div className={styles.profileButton}><ProfileImageMenu></ProfileImageMenu></div>
+      <div className={styles.profileButton}>
+        {currentUser  && 
+        <div className={styles.username}>{currentUser.username??currentUser.email}</div>
+        }
+        <ProfileImageMenu></ProfileImageMenu>
+        </div>
     </div>);
 }

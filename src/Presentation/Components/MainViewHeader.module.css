@@ -57,4 +57,10 @@
 
   .profileButton{
     margin-left: auto;
+        display: contents;
+  }
+
+  .username{
+       align-content: center;
+       font-weight: 600;
   }
