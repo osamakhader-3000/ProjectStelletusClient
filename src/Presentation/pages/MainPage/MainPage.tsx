@@ -45,14 +45,14 @@ function MainPage() {
                           <Route path="/emailverification" element={<EmailUnverifiedMessage />} />
                           <Route path="/tempaccount" element={<TempAccountMessage />} />
                           <Route path="/forbidden" element={<ForbiddenMessage />} />
-                          <Route path="/" element={<Navigate to="/mytasks" replace />} />
+                          <Route path="/myprofile" element={<Profile />} />
                           <Route element={<EmailVerifiedRoute />}>
                             <Route element={<TempAccountRoute />}>
+                              <Route path="/" element={<Navigate to="/mytasks" replace />} />
                               <Route path="/mytasks" element={<TasksPage />} />
                               <Route element={<AdminAccountRoute />}>
                                 <Route path="/users" element={<Users />} />
                               </Route>
-                              <Route path="/myprofile" element={<Profile />} />
                               <Route path="/addtask" element={<AddTaskForm />} />
                               <Route path="/task/:id" element={<EditTaskForm />} />
                               <Route element={<TechnicalSupportAccountRoute />}>
