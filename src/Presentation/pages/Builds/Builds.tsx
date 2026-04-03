@@ -6,22 +6,29 @@ import { Link } from "react-router";
 import { ButtonPreloader } from "../../Components/GeneralComponents/ButtonPreloader";
 import { DeleteIconSvg } from "../../Components/GeneralComponents/DeleteIconSvg";
 import { EditIconSvg } from "../../Components/GeneralComponents/EditIconSvg";
+import { UserRole } from "../../../Domain/Entities/User";
 
 export default function Builds() {
 
-    const { buildService, notificationHandlingBus } = useContext(DependencyContext);
+    const { buildService, notificationHandlingBus, userService } = useContext(DependencyContext);
 
     const [builds, setBuilds] = useState<Build[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [buildId, setBuildId] = useState<string | null>(null);
     const [deletingBuildIds, setDeletingBuildIds] = useState<Set<string>>(new Set());
+    const [readonly, setReadonly] = useState(true);
 
     useEffect(() => {
         const fetchBuilds = async () => {
             const blds = await buildService.listBuilds();
             setBuilds(blds);
             setIsLoading(false);
+
+            let currentUser = await userService.GetCurrentUser();
+            if (currentUser)
+                setReadonly(currentUser.userRole !== UserRole.Administrator && currentUser.userRole !== UserRole.TechnicalSupport);
+
         }
         fetchBuilds();
     }, []);
@@ -83,9 +90,11 @@ export default function Builds() {
 
             <div className={styles.maincontainer}>
                 <div className={styles.buildpagebuttonspanel}>
-                    <Link to={'../addcubesbuild/'} >
-                        <button type="button" className={styles.addbuildbuttonclass}>+ Add Build</button>
-                    </Link>
+                    {!readonly &&
+                        <Link to={'../addcubesbuild/'} >
+                            <button type="button" className={styles.addbuildbuttonclass}>+ Add Build</button>
+                        </Link>
+                    }
                 </div>
 
                 <div className={styles.info}>
@@ -95,18 +104,20 @@ export default function Builds() {
 
                     {builds.length > 0 && builds.map((build) => (
                         <div key={build.id} className={styles.buildcontainer}>
-                            <span className={styles.buttonscontainer}>
-                                <Link to={`/editcubesbuild/${build.id}`}>
-                                    <button className={styles.listbuttonclass}>
-                                        <EditIconSvg />
+                            {!readonly &&
+                                <span className={styles.buttonscontainer}>
+                                    <Link to={`/editcubesbuild/${build.id}`}>
+                                        <button className={styles.listbuttonclass}>
+                                            <EditIconSvg />
+                                        </button>
+                                    </Link>
+                                    <button className={styles.listbuttonclass} onClick={() => showDeleteConfirmation(build.id)}>
+                                        {deletingBuildIds.has(build.id!) ? <ButtonPreloader /> : (
+                                            <DeleteIconSvg />
+                                        )}
                                     </button>
-                                </Link>
-                                <button className={styles.listbuttonclass} onClick={() => showDeleteConfirmation(build.id)}>
-                                    {deletingBuildIds.has(build.id!) ? <ButtonPreloader /> : (
-                                        <DeleteIconSvg />
-                                    )}
-                                </button>
-                            </span>
+                                </span>
+                            }
                             <span style={{ flex: 1, textAlign: "center", marginLeft: "10%", marginRight: "10%" }}>{build.version}</span>
                             <p>{build.link}</p>
                             {build.clients && build.clients.length > 0 && <div className={styles.clientscontainer}>

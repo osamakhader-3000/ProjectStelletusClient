@@ -9,10 +9,9 @@ export class RealmStorage implements IRealmStorage {
         let realms: Realm[] = [];
 
         if (user != null && user.emailVerificationStatus == UserEmailVerificationStatus.Verified && user.accountStatus == UserAccountStatus.Active) {
+            
             realms.push(new Realm("mytasks", "My Tasks", "Description of My Tasks"));
-
-            if (user.userRole == UserRole.TechnicalSupport || user.userRole == UserRole.Administrator)
-                realms.push(new Realm("builds", "Builds", "Description of Builds"));
+            realms.push(new Realm("builds", "Builds", "Description of Builds"));
 
             if (user.userRole == UserRole.Administrator)
                 realms.push(new Realm("users", "Users", "Description of Users"));

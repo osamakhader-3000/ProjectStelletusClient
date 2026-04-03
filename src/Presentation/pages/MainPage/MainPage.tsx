@@ -50,6 +50,7 @@ function MainPage() {
                             <Route element={<TempAccountRoute />}>
                               <Route path="/" element={<Navigate to="/mytasks" replace />} />
                               <Route path="/mytasks" element={<TasksPage />} />
+                              <Route path="/builds" element={<Builds />} />
                               <Route element={<AdminAccountRoute />}>
                                 <Route path="/users" element={<Users />} />
                               </Route>
@@ -58,7 +59,6 @@ function MainPage() {
                               <Route element={<TechnicalSupportAccountRoute />}>
                                 <Route path="/addcubesbuild" element={<AddCubesBuild />} />
                                 <Route path="/editcubesbuild/:id" element={<EditCubesBuild />} />
-                                <Route path="/builds" element={<Builds />} />
                               </Route>
                             </Route>
                           </Route>
