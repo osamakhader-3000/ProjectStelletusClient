@@ -13,11 +13,13 @@ export default function MainViewHeader(){
     <div className={styles.mainviewheader}>
       {currentUser && currentUser.emailVerificationStatus == UserEmailVerificationStatus.Verified && currentUser.accountStatus == UserAccountStatus.Active && (
         <div className={styles.searchDiv}>
+          {/* 
           <SearchBox
             innerDivStyle={styles.innerDivStyle}
             innerDivStyleActive={styles.innerDivStyleActive}
             placeholder="Search tickets"
-          />
+          /> 
+          */}
         </div>
       )}
       <div className={styles.profileButton}><ProfileImageMenu></ProfileImageMenu></div>
