@@ -4,7 +4,7 @@ import { useState, useContext, useEffect } from 'react';
 import PopupBackground from './PopupBackground';
 import styles from './ProfileImageMenu.module.css'
 import ProfileImageMenuItem from '../../Application/DataTransferObjects/ProfileImageMenuItem'
-import steletusLogo from '../../Assets/Icons/steletuslogo.png'
+import steletusLogo from '../../assets/Icons/steletuslogo.png';
 
 export default function ProfileImageMenu() {
 
