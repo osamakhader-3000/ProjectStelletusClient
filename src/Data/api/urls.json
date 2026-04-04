@@ -4,7 +4,7 @@
     "microsoft-login":"api/auth/microsoftlogin",
     "create-account":"api/auth/createaccount",
     "login":"api/auth/login",
-    "steletus-app":"/app",
+    "steletus-app":"/SteletusApp",
     "tasks-list":"api/tasks/list",
     "task-create":"api/tasks/create",
     "task-update":"api/tasks/update",
