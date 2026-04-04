@@ -6,6 +6,7 @@ import { useTranslations } from '../../Hooks/useTranslations.tsx';
 import { DependencyContext } from '../../../context/DependencyContext.tsx';
 import { useContext, useRef } from 'react';
 import { useLocation } from 'react-router';
+import backgroundImage from '../../../assets/Icons/Logo.jpg';
 
 interface LoginPageProps {
   newAccount: boolean;
@@ -32,7 +33,7 @@ export default function LoginPage({newAccount}:LoginPageProps) {
     
     <div className={styles.loginroot}>
       <div className={styles.container}>
-        <div className={styles.logodiv}>
+        <div className={styles.logodiv} style={{ backgroundImage: `url(${backgroundImage})` }}>
           <h3>Steletus</h3>
           <h4>Your business organizer</h4>
         </div>
