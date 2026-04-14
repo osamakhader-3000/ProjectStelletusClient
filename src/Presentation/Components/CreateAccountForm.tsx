@@ -62,7 +62,7 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = () => {
     setInvalidPassword(false);
     setInvalidEmail(false);
 
-    if (username.length === 0 || username.length < 5 || username.length > 50) {
+    if (validUsername(username) === false) {
       setInvalidUsername(true);
       setShowError(true);
       return;
@@ -95,6 +95,10 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = () => {
 
   };
 
+  function validUsername(username: string): boolean {
+    const usernameRegex = /^[a-zA-Z0-9._-]{5,50}$/;
+    return usernameRegex.test(username);
+  }
 
   useEffect(() => {
     if (!showError) return;
@@ -127,8 +131,9 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = () => {
                 <p>A valid email must be in the format <em>someone@provider.com</em>.</p>
               </div>}
               {invalidUsername && <div>
-                <p> Please insert a valid username.</p>
-                <p>A valid Username must be between 5 and 50 characters.</p>
+                <p>Please insert a valid username.</p>
+                <p>A valid Username can only contain letters, numbers, underscores</p>
+                <p>and dots, and must be between 5 and 50 characters.</p>
               </div>}
               {invalidPassword && <div>
                 <p>Please insert a valid password.</p>
