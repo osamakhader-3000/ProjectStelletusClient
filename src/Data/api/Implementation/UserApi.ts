@@ -27,7 +27,7 @@ export class UserApi extends GeneralApi implements IUserApi {
 
 
     async CreateAccount(account: Account): Promise<GeneralApiResult<Date>> {
-        debugger;
+      
         let url = `${this.baseUrl}/${urls['create-account']}`;
         let result = await this.GeneralApiCaller<Date>('POST', url, account, null);
         return result;

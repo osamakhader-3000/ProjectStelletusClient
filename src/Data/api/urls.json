@@ -43,6 +43,4 @@
     "client-update":"api/clients/update",
     "client-delete":"api/clients/delete",
     "client-list":"api/clients/list"
-
-
 }
