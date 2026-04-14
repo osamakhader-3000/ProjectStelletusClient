@@ -1,4 +1,4 @@
-import { User } from "../../Domain/Entities/User";
+import { User, UserRole } from "../../Domain/Entities/User";
 import { IUserService } from "../Interfaces/IUserService";
 import { IUserRepository } from "../Repositories/IUserRepository";
 import UserLoginStatus from "../../Domain/Entities/Authentication/UserLogInStatus";
@@ -118,6 +118,13 @@ export class UserService implements IUserService {
 
     async ActivateUser(userId: string): Promise<boolean> {
         let result = await this.userRepository.ActivateUser(userId);
+        return result;
+    }
+
+    async ChangeUserRole(userId: string, newRole: number): Promise<boolean> {
+        let role: UserRole = newRole as UserRole;
+        let user = new User(userId, null, "", null, undefined, undefined, role);
+        let result = await this.userRepository.ChangeUserRole(user);
         return result;
     }
 

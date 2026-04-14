@@ -18,4 +18,5 @@ export interface IUserRepository {
   ListUsers():Promise<User[]>;
   SuspendUser(userId: string): Promise<boolean>;
   ActivateUser(userId: string): Promise<boolean>;
+  ChangeUserRole(user: User): Promise<boolean>;
 }

@@ -4,7 +4,7 @@
     "microsoft-login":"api/auth/microsoftlogin",
     "create-account":"api/auth/createaccount",
     "login":"api/auth/login",
-    "steletus-app":"/SteletusApp",
+    "steletus-app":"/steletusapp",
     "tasks-list":"api/tasks/list",
     "task-create":"api/tasks/create",
     "task-update":"api/tasks/update",
@@ -35,7 +35,8 @@
     "build-get":"api/builds/get",
     "build-update":"api/builds/update",
     "build-delete":"api/builds/delete",
-    "build-list":"api/builds/list"
+    "build-list":"api/builds/list",
+    "change-user-role":"api/users/changerole"
 
 
 }

@@ -17,4 +17,5 @@ export interface IUserApi{
     ListUsers():Promise<GeneralApiResult<User[]>>;
     SuspendUser(userId: string): Promise<GeneralApiResult<boolean>>;
     ActivateUser(userId: string): Promise<GeneralApiResult<boolean>>;
+    ChangeUserRole(user: User): Promise<GeneralApiResult<boolean>>;
 }

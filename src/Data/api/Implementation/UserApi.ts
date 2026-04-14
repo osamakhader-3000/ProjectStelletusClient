@@ -110,6 +110,12 @@ export class UserApi extends GeneralApi implements IUserApi {
         return result;
     }
 
+    async ChangeUserRole(user: User): Promise<GeneralApiResult<boolean>> {
+        let url = `${this.baseUrl}/${urls['change-user-role']}`;
+        let result = await this.GeneralApiCaller<boolean>('PUT', url, user);
+        return result;
+    }
+
 
 }
 

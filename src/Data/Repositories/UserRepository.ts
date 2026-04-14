@@ -145,5 +145,12 @@ export class UserRepository implements IUserRepository {
         });
        return result?.success ?? false;
     }  
+
+    async ChangeUserRole(user: User): Promise<boolean> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<boolean>>>(async () => {
+            return this.userApi.ChangeUserRole(user);
+        });
+        return result?.success ?? false;
+    }
     
 }
