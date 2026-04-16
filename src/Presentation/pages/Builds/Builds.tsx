@@ -119,10 +119,10 @@ export default function Builds() {
                                 </span>
                             }
                             <span className={styles.buildversion}>{build.version}</span>
-                            <a rel="noopener noreferrer" target="_blank" className={styles.buildlink} href={build.link && !/^https?:\/\//i.test(build.link) ? `https://${build.link}` : build.link}><p>{build.link}</p></a>
+                            <a rel="noopener noreferrer" target="_blank" title={build.link} className={styles.buildlink} href={build.link && !/^https?:\/\//i.test(build.link) ? `https://${build.link}` : build.link}><p>{build.link}</p></a>
                             {build.clients && build.clients.length > 0 && <div className={styles.clientscontainer}>
                                 {build.clients.map((client) => (
-                                    <span key={client} className={styles.client}>{client}</span>
+                                    <span key={client} className={styles.client} title={client}>{client}</span>
                                 ))}
 
                             </div>}
