@@ -18,7 +18,7 @@ export class BuildRepository implements IBuildRepository {
         let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<Build>>>(async () => {
             return this.buildApi.getBuild(buildId);
         });
-        return result?.data ?? new Build('', '', '', []);
+        return result?.data ?? new Build('', '', '', [], new Date(), '');
 
     }
 
@@ -40,7 +40,15 @@ export class BuildRepository implements IBuildRepository {
         let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<Build[]>>>(async () => {
             return this.buildApi.listBuilds();
         });
-        return result?.data ?? [];
+        var b = result?.data ?? [];
+
+        for (let i = 0; i < b.length; i++) {
+            const element = b[i];
+            element.updatedAt = new Date();
+            element.updatedBy = "mohammad.almomani"
+        }
+
+        return b;
 
     }
 

@@ -104,6 +104,40 @@ export default function Builds() {
 
                     {builds.length > 0 && builds.map((build) => (
                         <div key={build.id} className={styles.buildcontainer}>
+
+                            <table className={styles.buildstable}>
+                                <tbody>
+                                    <tr>
+                                        <td className={styles.buildTitleCell}>Build number of version:</td>
+                                        <td>{build.version}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className={styles.buildTitleCell}>Link:</td>
+                                        <td><a rel="noopener noreferrer" target="_blank" title={build.link} className={styles.buildlink} href={build.link && !/^https?:\/\//i.test(build.link) ? `https://${build.link}` : build.link}>{build.link}</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td className={styles.buildTitleCell}>Updated At:</td>
+                                        <td>{build.updatedAt.toLocaleString()}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className={styles.buildTitleCell}>Updated By:</td>
+                                        <td>{build.updatedBy}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className={styles.buildTitleCell}>Clients who have the build:</td>
+                                        <td>
+                                            {build.clients && build.clients.length > 0 && <div className={styles.clientscontainer}>
+                                                {build.clients.map((client) => (
+                                                    <span key={client} className={styles.client} title={client}>{client}</span>
+                                                ))}
+
+                                            </div>}
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
                             {!readonly &&
                                 <span className={styles.buttonscontainer}>
                                     <Link to={`/editcubesbuild/${build.id}`}>
@@ -118,14 +152,7 @@ export default function Builds() {
                                     </button>
                                 </span>
                             }
-                            <span className={styles.buildversion}>{build.version}</span>
-                            <a rel="noopener noreferrer" target="_blank" title={build.link} className={styles.buildlink} href={build.link && !/^https?:\/\//i.test(build.link) ? `https://${build.link}` : build.link}><p>{build.link}</p></a>
-                            {build.clients && build.clients.length > 0 && <div className={styles.clientscontainer}>
-                                {build.clients.map((client) => (
-                                    <span key={client} className={styles.client} title={client}>{client}</span>
-                                ))}
-
-                            </div>}
+                           
                         </div>
                     ))}
 

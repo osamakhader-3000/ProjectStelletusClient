@@ -62,6 +62,7 @@
     white-space: nowrap;
     max-width: stretch;
     overflow: hidden;
+    text-overflow: ellipsis;
     width: 50%;
 }
 
@@ -199,6 +200,20 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: inline-block;
-    margin-left: 10%;
-    margin-right: 10%;
+    max-width: 100%;
 }
+
+.buildstable {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.buildTitleCell {
+    width: 25%;
+}
+
+.buildstable th, .buildstable td {
+    border: 1px solid black;   /* Creates the lines inside */
+    padding: 8px;
+    text-align: left;
+  }
