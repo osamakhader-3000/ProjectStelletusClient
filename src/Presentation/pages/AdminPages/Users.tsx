@@ -104,9 +104,9 @@ export default function Users() {
                                 <td>
                                     {user.userRole == 3 && "Admin"}
                                     {user.userRole != 3 &&
-                                        <select onChange={(event) => roleChanged(event, user.id)}>
-                                            <option value="1" selected={user.userRole === 1}>Employee</option>
-                                            <option value="2" selected={user.userRole === 2}>Technical Support</option>
+                                        <select value={user.userRole} onChange={(event) => roleChanged(event, user.id)}>
+                                            <option value="1">Employee</option>
+                                            <option value="2">Technical Support</option>
                                         </select>}
                                 </td>
                                 <td><button disabled={user.accountStatus === UserAccountStatus.Active} onClick={() => activateUser(user.id)}>Activate</button></td>

@@ -1,10 +1,11 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { TextBox } from '../GeneralComponents/TextBox';
 import style from './CssStyles/CubesBuildForm.module.css';
 import { LoadingButton } from '../GeneralComponents/LoadingButton';
 import { useNavigate } from 'react-router';
 import { DependencyContext } from '../../../context/DependencyContext';
 import Build from '../../../Domain/Entities/Build';
+import Client from '../../../Domain/Entities/Client';
 
 
 interface CubesBuildFormProps {
@@ -14,31 +15,34 @@ interface CubesBuildFormProps {
 
 export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
 
-    const { buildService, notificationHandlingBus, errorHandlingBus } = useContext(DependencyContext);
+    const { buildService, clientService, notificationHandlingBus, errorHandlingBus } = useContext(DependencyContext);
     const navigate = useNavigate();
 
-    const mapped = build?.clients?.map((name, index) => ({ id: index, name }));
-    const [clients, setClients] = useState(mapped?.length ? mapped : [{ id: 0, name: '' }]);
+    //const mapped = build?.clients?.map((client, index) => ({ id: index, name: client.name }));
+    const [clients, setClients] = useState(build?.clients?.length ? build.clients : []);
     const [isSaving, setIsSaving] = useState(false);
     const [version, setVersion] = useState(build?.version ?? '');
     const [link, setLink] = useState(build?.link ?? '');
+    const [allClients, setAllClients] = useState<Client[]>([]);
+    const [isLoadingClients, setIsLoadingClients] = useState(true);
 
-    function addClientAfter(afterId: number) {
-        setClients(prev => {
-            const index = prev.findIndex(c => c.id === afterId);
-            const newClient = { id: Date.now(), name: '' };
-            const next = [...prev];
-            next.splice(index + 1, 0, newClient);
-            return next;
-        });
-    }
 
-    function removeClient(id: number) {
-        setClients(prev => prev.filter(c => c.id !== id));
-    }
+    useEffect(() => {
 
-    function updateClientName(id: number, value: string) {
-        setClients(prev => prev.map(c => c.id === id ? { ...c, name: value } : c));
+        async function fetchClients() {
+            let fetchedClients = await clientService.listClients();
+            setAllClients(fetchedClients);
+            setIsLoadingClients(false);
+        }
+        fetchClients();
+    }, []);
+
+    function toggleClient(client: Client) {
+        if (clients.some(c => c.id === client.id)) {
+            setClients(clients.filter(c => c.id !== client.id));
+        } else {
+            setClients([...clients, client]);
+        }
     }
 
     function handleCancel() {
@@ -51,7 +55,7 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
             errorHandlingBus.ErrorOccured('The build version or number is required');
             return false;
         }
-        
+
         return true;
     }
 
@@ -60,7 +64,7 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
         if (!validateBuild())
             return;
 
-        let cubesBuild = new Build(null, version, link, clients.map(c => c.name.trim()).filter(name => name !== ''));
+        let cubesBuild = new Build(null, version, link, clients, new Date(), '');
 
         setIsSaving(true);
 
@@ -86,24 +90,24 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
             return;
         }
 
-        let cubesBuild = new Build(build.id, version, link, clients.map(c => c.name.trim()).filter(name => name !== ''));
+        let cubesBuild = new Build(build.id, version, link, clients, build.updatedAt, build.updatedBy);
 
         setIsSaving(true);
 
         let result = await buildService.updateBuild(cubesBuild);
-        
+
         setIsSaving(false);
 
-        if (result) 
+        if (result)
             notificationHandlingBus.NotificationOccured('Build updated successfully');
-        
+
     }
 
 
     return (
         <div className={style.maincontainer}>
             <div className={style.formcontainer}>
-                {editMode ? <h2>Edit Cubes Build</h2> : <h2>Add Cubes Build</h2>}
+                {editMode ? <h2>Edit Build</h2> : <h2>Add Build</h2>}
                 <div className={style.elementcontainer}>
                     <TextBox maxLength={100} placeholder="Version or number" value={version} onChange={e => setVersion(e.target.value)} />
                 </div>
@@ -111,24 +115,38 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
                     <TextBox maxLength={2000} placeholder="Link of the build" value={link} onChange={e => setLink(e.target.value)} />
                 </div>
                 <br /><br />
-                <p>Clients has the build:</p>
-                <div className={`${style.elementcontainer} ${style.clientContainer}`}>
-                    {clients.map(client => (
-                        <div key={client.id} className={style.clientInnerContainer}>
-                            <TextBox maxLength={100} value={client.name} onChange={e => updateClientName(client.id, e.target.value)} />
-                            <button onClick={() => addClientAfter(client.id)}>+</button>
-                            <button className={clients.length > 1 ? '' : style.hidden} onClick={() => removeClient(client.id)}>-</button>
-                        </div>
-                    ))}
+
+                <div className={style.clientsContainer}>
+                    <h3>Associated Clients</h3>
+                    <div className={style.clientList}>
+                        {isLoadingClients && <p>Loading client...</p>}
+                        {!isLoadingClients && allClients.map(client => (
+                            <div key={client.id} className={style.clientListItem}>
+                                <input
+                                    type="checkbox"
+                                    checked={clients.some(c => c.id === client.id)}
+                                    onChange={() => toggleClient(client)}
+                                />
+                                <span className={style.spanClientName} onClick={() => toggleClient(client)}>{client.name}</span>
+                                <span title={'open ' + client.name}>
+                                    <a href={`/editcubesclient/${client.id}`} target="_blank" rel="noopener noreferrer">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="blue" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="blue" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </a>
+                                </span>
+                            </div>
+                        ))}
+                    </div>
                 </div>
                 <div className={`${style.elementcontainer} ${style.elementbuttoncontainer}`}>
 
                     {editMode ? <LoadingButton cssClass={`${style.formbutton} ${style.formokbutton}`} onClick={editBuild} label='Save' isLoading={isSaving} />
-                     :  <LoadingButton cssClass={`${style.formbutton} ${style.formokbutton}`} onClick={addBuild} label='Add' isLoading={isSaving} />}
-                    
+                        : <LoadingButton cssClass={`${style.formbutton} ${style.formokbutton}`} onClick={addBuild} label='Add' isLoading={isSaving} />}
 
                     <button className={style.formbutton} onClick={handleCancel}>Cancel</button>
                 </div>
+
             </div>
         </div>
     );

@@ -17,6 +17,10 @@ import EditCubesBuild from '../../Components/CubesBuild/EditCubesBuild.tsx';
 import Builds from '../Builds/Builds.tsx';
 import { TechnicalSupportAccountRoute } from '../../Routes/TechnicalSupportAccountRoute.tsx';
 import { ForbiddenMessage } from '../auth/ForbiddenMessage.tsx';
+import Clients from '../Clients/Clients.tsx';
+import EditCubesClient from '../../Components/CubesClient/EditCubesClient.tsx';
+import AddCubesClient from '../../Components/CubesClient/AddCubesClient.tsx';
+import ViewCubesClient from '../../Components/CubesClient/ViewCubesClient.tsx';
 
 function MainPage() {
 
@@ -51,14 +55,18 @@ function MainPage() {
                               <Route path="/" element={<Navigate to="/mytasks" replace />} />
                               <Route path="/mytasks" element={<TasksPage />} />
                               <Route path="/builds" element={<Builds />} />
+                              <Route path="/clients" element={<Clients />} />
                               <Route element={<AdminAccountRoute />}>
                                 <Route path="/users" element={<Users />} />
                               </Route>
                               <Route path="/addtask" element={<AddTaskForm />} />
                               <Route path="/task/:id" element={<EditTaskForm />} />
+                              <Route path="/viewcubesclient/:id" element={<ViewCubesClient />} />
                               <Route element={<TechnicalSupportAccountRoute />}>
                                 <Route path="/addcubesbuild" element={<AddCubesBuild />} />
                                 <Route path="/editcubesbuild/:id" element={<EditCubesBuild />} />
+                                <Route path="/addcubesclient" element={<AddCubesClient />} />
+                                <Route path="/editcubesclient/:id" element={<EditCubesClient />} />                                
                               </Route>
                             </Route>
                           </Route>

@@ -12,6 +12,7 @@ export class RealmStorage implements IRealmStorage {
             
             realms.push(new Realm("mytasks", "My Tasks", "Description of My Tasks"));
             realms.push(new Realm("builds", "Builds", "Description of Builds"));
+            realms.push(new Realm("clients", "Clients", "Description of Clients"));
 
             if (user.userRole == UserRole.Administrator)
                 realms.push(new Realm("users", "Users", "Description of Users"));

@@ -27,7 +27,7 @@ export default function EditCubesBuild() {
         return (
             <div className={styles.messagecontainer}>
                 <h3>Please wait</h3>
-                <h3>Loading cubes build ...</h3>
+                <h3>Loading build ...</h3>
             </div>
         );
 

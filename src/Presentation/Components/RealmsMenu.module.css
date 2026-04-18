@@ -2,12 +2,9 @@
     font: inherit;
     color: rgb(67, 24, 255);
     text-decoration: none;
-    display: flex;
-    flex-direction: row;
     -webkit-box-align: center;
     align-items: center;
     -webkit-box-pack: justify;
-    justify-content: space-between;
 }
 
 .realmsmenuelement:hover{
