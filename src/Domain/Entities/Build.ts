@@ -5,9 +5,9 @@ export default class Build {
     version: string;
     link: string;
     clients: Client[];
-    updatedAt: Date;
-    updatedBy: string;
-    constructor(id: string|null, version: string, link: string, clients: Client[], updatedAt: Date, updatedBy: string) {
+    updatedAt: Date|null;
+    updatedBy: string|null;
+    constructor(id: string|null, version: string, link: string, clients: Client[], updatedAt: Date|null, updatedBy: string|null) {
         this.id = id;
         this.version = version;
         this.link = link;

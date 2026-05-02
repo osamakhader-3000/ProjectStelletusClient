@@ -1,13 +1,13 @@
 import Build from "./Build";
 
 export default class Client {
-    id: string;
+    id: string|null;
     name: string;
     description: string;
     builds: Build[];    
     currentChangeRequest: string;
     lastChangeRequest: string;
-    constructor(id: string, name: string, description: string, builds: Build[], currentChangeRequest: string, lastChangeRequest: string) {
+    constructor(id: string|null, name: string, description: string, builds: Build[], currentChangeRequest: string, lastChangeRequest: string) {
         this.id = id;
         this.name = name;
         this.description = description;

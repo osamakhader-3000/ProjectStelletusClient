@@ -4,9 +4,9 @@ import { TextBox } from './GeneralComponents/TextBox'
 import styles from './CreateAccountForm.module.css'
 import { DependencyContext } from '../../context/DependencyContext';
 import { ErrorMessageBox } from './GeneralComponents/ErrorMessageBox';
-import { User } from "../../Domain/Entities/User";
 import { useNavigate } from "react-router";
 import { LoadingButton } from "./GeneralComponents/LoadingButton";
+import Account from "../../Domain/Entities/Account";
 
 interface CreateAccountFormProps {
   redirectUrl: string;
@@ -81,11 +81,11 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = () => {
       return;
     }
 
-    let user = new User(null, username, email, password);
+    let account = new Account(username, email, password);
 
     setIsLoading(true);
 
-    var success = await userService.CreateAccount(user);
+    var success = await userService.CreateAccount(account);
 
     setIsLoading(false);
 

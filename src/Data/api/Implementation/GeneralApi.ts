@@ -13,18 +13,14 @@ import { GeneralApiResult,GeneralApiResultFactory } from '../../DataTransferObje
         }
 
     async GeneralApiCaller<T>(method: 'GET' | 'POST' | 'PUT' | 'DELETE', url: string, data?: any, headers?: any): Promise<GeneralApiResult<T>> {
-
         try 
-        {
-           
+        {           
             return await this.ApiReferee<T>(method, url, data, headers);
-
         } 
         catch (error: any)         
         {
-            return GeneralApiResultFactory.CreateFromErrorResponse<T>(error);   
-        }   
-
+            return GeneralApiResultFactory.CreateFromErrorResponse<T>(error); 
+        }
     }
 
 

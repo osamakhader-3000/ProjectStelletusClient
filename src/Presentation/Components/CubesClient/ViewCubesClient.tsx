@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import Client from "../../../Domain/Entities/Client";
 import { DependencyContext } from "../../../context/DependencyContext";
+import styles from "./CssStyles/ViewCubesClient.module.css";
+import { BackButton } from "../GeneralComponents/BackButton";
 
 export default function ViewCubesClient() {
 
@@ -34,19 +36,47 @@ export default function ViewCubesClient() {
         );
 
     return (
-        <div>
-            <h2>{client.name}</h2>
-            <p>{client.description}</p>
-            <h3>Builds</h3>
-            <ul>
-                {client.builds.map(build => (
-                    <li key={build.id}>{build.version}</li>
-                ))}
-            </ul>
-            <h3>Current Change Request</h3>
-            <p>{client.currentChangeRequest}</p>
-            <h3>Last Change Request</h3>
-            <p>{client.lastChangeRequest}</p>
+
+        <div className={styles.maincontainer}>
+
+            <div className={styles.clientpagebuttonspanel}>
+                <BackButton to={'../clients/'} />
+            </div>
+
+            <div className={styles.info}>
+                <div className={styles.clientHeader}>
+                    <span className={styles.clientName}>{client.name}</span>
+                </div>
+                <div key={client.id} className={styles.clientcontainer}>
+
+                    <table className={styles.clientstable}>
+                        <tbody>
+                            <tr>
+                                <td className={styles.clientTitleCell}>Description:</td>
+                                <td>{client.description}</td>
+                            </tr>
+                            <tr>
+                                <td className={styles.clientTitleCell}>Current Change Request:</td>
+                                <td >{client.currentChangeRequest}</td>
+                            </tr>
+                            <tr>
+                                <td className={styles.clientTitleCell}>Last Change Request:</td>
+                                <td >{client.lastChangeRequest}</td>
+                            </tr>
+                            <tr>
+                                <td className={styles.clientTitleCell}>Client Builds:</td>
+                                <td>{client.builds.map((build, index) => (
+                                    <div key={index} className={styles.buildItem}>
+                                        <a href={`/viewcubesbuild/${build.id}`} target="_blank" className={styles.buildLink}><span className={styles.buildName}>{build.version}</span></a>
+                                    </div>
+                                ))}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
     );
 }

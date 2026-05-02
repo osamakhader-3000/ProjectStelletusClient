@@ -7,6 +7,7 @@ import { ButtonPreloader } from "../../Components/GeneralComponents/ButtonPreloa
 import { DeleteIconSvg } from "../../Components/GeneralComponents/DeleteIconSvg";
 import { EditIconSvg } from "../../Components/GeneralComponents/EditIconSvg";
 import { UserRole } from "../../../Domain/Entities/User";
+import { ViewIconSvg } from "../../Components/GeneralComponents/ViewIconSvg";
 
 export default function Builds() {
 
@@ -18,6 +19,7 @@ export default function Builds() {
     const [buildId, setBuildId] = useState<string | null>(null);
     const [deletingBuildIds, setDeletingBuildIds] = useState<Set<string>>(new Set());
     const [readonly, setReadonly] = useState(true);
+    const [deletePermission, setDeletePermission] = useState(true);
 
     useEffect(() => {
         const fetchBuilds = async () => {
@@ -26,9 +28,10 @@ export default function Builds() {
             setIsLoading(false);
 
             let currentUser = await userService.GetCurrentUser();
-            if (currentUser)
+            if (currentUser){
                 setReadonly(currentUser.userRole !== UserRole.Administrator && currentUser.userRole !== UserRole.TechnicalSupport);
-
+                setDeletePermission(currentUser.userRole === UserRole.Administrator);
+            }
         }
         fetchBuilds();
     }, []);
@@ -56,8 +59,6 @@ export default function Builds() {
         handleDeleteBuild(buildId);
     }
 
-
-
     const handleDeleteBuild = async (buildId: string | null) => {
 
         if (!buildId) return;
@@ -74,6 +75,7 @@ export default function Builds() {
         setDeletingBuildIds(prev => { const next = new Set(prev); next.delete(buildId!); return next; });
 
     }
+
     return (
 
         <>
@@ -104,11 +106,35 @@ export default function Builds() {
 
                     {builds.length > 0 && builds.map((build) => (
                         <div key={build.id} className={styles.buildcontainer}>
-
+                            <div className={styles.buildHeader}>
+                                <span className={styles.buildName}>{build.version}</span>
+                                <span className={styles.actionButtons}>
+                                    <Link to={`/viewcubesbuild/${build.id}`} className={styles.viewButton} title="View">
+                                        <button className={styles.listbuttonclass}>
+                                            <ViewIconSvg />
+                                        </button>
+                                    </Link>
+                                    {!readonly &&
+                                        <>
+                                            <Link to={`/editcubesbuild/${build.id}`} className={styles.editButton} title="Edit">
+                                                <button className={styles.listbuttonclass}>
+                                                    <EditIconSvg />
+                                                </button>
+                                            </Link>
+                                            {deletePermission &&
+                                            <button className={styles.listbuttonclass} onClick={() => showDeleteConfirmation(build.id)} title="Delete">
+                                                {deletingBuildIds.has(build.id!) ? <ButtonPreloader /> : (
+                                                    <DeleteIconSvg />
+                                                )}
+                                            </button>}
+                                        </>
+                                    }
+                                </span>
+                            </div>
                             <table className={styles.buildstable}>
                                 <tbody>
                                     <tr>
-                                        <td className={styles.buildTitleCell}>Build number of version:</td>
+                                        <td className={styles.buildTitleCell}>Build number or version:</td>
                                         <td>{build.version}</td>
                                     </tr>
                                     <tr>
@@ -117,45 +143,16 @@ export default function Builds() {
                                     </tr>
                                     <tr>
                                         <td className={styles.buildTitleCell}>Updated At:</td>
-                                        <td>{build.updatedAt.toLocaleString()}</td>
+                                        <td>{build.updatedAt?.toLocaleString()}</td>
                                     </tr>
                                     <tr>
                                         <td className={styles.buildTitleCell}>Updated By:</td>
                                         <td>{build.updatedBy}</td>
                                     </tr>
-                                    <tr>
-                                        <td className={styles.buildTitleCell}>Clients who have the build:</td>
-                                        <td>
-                                            {build.clients && build.clients.length > 0 && <div className={styles.clientscontainer}>
-                                                {build.clients.map((client) => (
-                                                    <span key={client} className={styles.client} title={client}>{client}</span>
-                                                ))}
-
-                                            </div>}
-                                        </td>
-                                    </tr>
-
                                 </tbody>
                             </table>
-
-                            {!readonly &&
-                                <span className={styles.buttonscontainer}>
-                                    <Link to={`/editcubesbuild/${build.id}`}>
-                                        <button className={styles.listbuttonclass}>
-                                            <EditIconSvg />
-                                        </button>
-                                    </Link>
-                                    <button className={styles.listbuttonclass} onClick={() => showDeleteConfirmation(build.id)}>
-                                        {deletingBuildIds.has(build.id!) ? <ButtonPreloader /> : (
-                                            <DeleteIconSvg />
-                                        )}
-                                    </button>
-                                </span>
-                            }
-                           
                         </div>
                     ))}
-
                 </div>
             </div>
         </>

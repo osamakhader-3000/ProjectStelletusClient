@@ -15,19 +15,19 @@ export class ClientService implements IClientService{
         return this.clientRepository.getClient(clientId);
     }
     
-    listClients(): Promise<Client[]> {
-        return this.clientRepository.listClients();
+    listClients(buildId?: string): Promise<Client[]> {
+        return this.clientRepository.listClients(buildId);
     }
 
-    updateClient(client: Client): Promise<void> {
+    updateClient(client: Client): Promise<boolean> {
         return this.clientRepository.updateClient(client);
     }
 
-    deleteClient(clientId: string): Promise<void> {
+    deleteClient(clientId: string): Promise<boolean> {
         return this.clientRepository.deleteClient(clientId);
     }
 
-    createClient(client: Client): Promise<void> {
+    createClient(client: Client): Promise<boolean> {
         return this.clientRepository.createClient(client);
     }
 }

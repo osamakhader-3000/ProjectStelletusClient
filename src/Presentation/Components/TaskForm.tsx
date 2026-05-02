@@ -72,9 +72,11 @@ export default function TaskForm({ taskId = null, taskTitle = null, taskDescript
     setIsSaving(true);
 
     let result = await taskService.UpdateTask(_task);
-    if (result)
+    if (result){
       notificationHandlingBus.NotificationOccured("Task updated successfully");
-    
+      navigate('/mytasks');
+    }
+
     setIsSaving(false);
   }
 

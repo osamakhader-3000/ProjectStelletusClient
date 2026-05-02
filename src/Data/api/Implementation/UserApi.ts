@@ -1,4 +1,3 @@
-
 import { User } from '../../../Domain/Entities/User.ts'
 import { LoginRequest } from '../../DataTransferObjects/LoginRequest.ts'
 import { IUserApi } from '../Interfaces/IUserApi.ts'
@@ -8,6 +7,7 @@ import axios from 'axios';
 import { GeneralApiResult } from '../../DataTransferObjects/GeneralApiResult.ts';
 import { TokenHolder } from '../../DataTransferObjects/TokenHolder.ts';
 import { PasswordChangeRequest } from '../../DataTransferObjects/PasswordChangeRequest.ts';
+import Account from '../../../Domain/Entities/Account.ts';
 
 export class UserApi extends GeneralApi implements IUserApi {
 
@@ -26,10 +26,10 @@ export class UserApi extends GeneralApi implements IUserApi {
     }
 
 
-    async CreateAccount(user: User): Promise<GeneralApiResult<Date>> {
-
+    async CreateAccount(account: Account): Promise<GeneralApiResult<Date>> {
+        debugger;
         let url = `${this.baseUrl}/${urls['create-account']}`;
-        let result = await this.GeneralApiCaller<Date>('POST', url, user, null);
+        let result = await this.GeneralApiCaller<Date>('POST', url, account, null);
         return result;
     }
 
@@ -76,8 +76,8 @@ export class UserApi extends GeneralApi implements IUserApi {
         return result;
     }
 
-    async GetUserAccount(): Promise<GeneralApiResult<User>> {
-        let url = `${this.baseUrl}/${urls['get-user-account']}`;
+    async GetUserInfo(): Promise<GeneralApiResult<User>> {
+        let url = `${this.baseUrl}/${urls['get-user-info']}`;
         let result = await this.GeneralApiCaller<User>('GET', url);
         return result;
     }
@@ -113,6 +113,13 @@ export class UserApi extends GeneralApi implements IUserApi {
     async ChangeUserRole(user: User): Promise<GeneralApiResult<boolean>> {
         let url = `${this.baseUrl}/${urls['change-user-role']}`;
         let result = await this.GeneralApiCaller<boolean>('PUT', url, user);
+        return result;
+    }
+
+
+    async ListUsersByIds(userIds: string[]): Promise<GeneralApiResult<User[]>> {
+        let url = `${this.baseUrl}/${urls['list-users-by-ids']}`;
+        let result = await this.GeneralApiCaller<User[]>('POST', url, userIds);
         return result;
     }
 

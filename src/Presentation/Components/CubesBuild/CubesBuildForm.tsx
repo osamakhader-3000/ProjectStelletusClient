@@ -18,7 +18,6 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
     const { buildService, clientService, notificationHandlingBus, errorHandlingBus } = useContext(DependencyContext);
     const navigate = useNavigate();
 
-    //const mapped = build?.clients?.map((client, index) => ({ id: index, name: client.name }));
     const [clients, setClients] = useState(build?.clients?.length ? build.clients : []);
     const [isSaving, setIsSaving] = useState(false);
     const [version, setVersion] = useState(build?.version ?? '');
@@ -64,7 +63,7 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
         if (!validateBuild())
             return;
 
-        let cubesBuild = new Build(null, version, link, clients, new Date(), '');
+        let cubesBuild = new Build(null, version, link, clients, null, null);
 
         setIsSaving(true);
 
@@ -98,9 +97,10 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
 
         setIsSaving(false);
 
-        if (result)
+        if (result){
+            navigate('/builds');
             notificationHandlingBus.NotificationOccured('Build updated successfully');
-
+        }
     }
 
 
@@ -122,11 +122,7 @@ export function CubesBuildForm({ build, editMode }: CubesBuildFormProps) {
                         {isLoadingClients && <p>Loading client...</p>}
                         {!isLoadingClients && allClients.map(client => (
                             <div key={client.id} className={style.clientListItem}>
-                                <input
-                                    type="checkbox"
-                                    checked={clients.some(c => c.id === client.id)}
-                                    onChange={() => toggleClient(client)}
-                                />
+                                <input type="checkbox" checked={clients.some(c => c.id === client.id)} onChange={() => toggleClient(client)} />
                                 <span className={style.spanClientName} onClick={() => toggleClient(client)}>{client.name}</span>
                                 <span title={'open ' + client.name}>
                                     <a href={`/editcubesclient/${client.id}`} target="_blank" rel="noopener noreferrer">

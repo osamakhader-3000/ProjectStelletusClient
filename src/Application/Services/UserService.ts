@@ -2,6 +2,7 @@ import { User, UserRole } from "../../Domain/Entities/User";
 import { IUserService } from "../Interfaces/IUserService";
 import { IUserRepository } from "../Repositories/IUserRepository";
 import UserLoginStatus from "../../Domain/Entities/Authentication/UserLogInStatus";
+import Account from "../../Domain/Entities/Account";
 
 export class UserService implements IUserService {
 
@@ -12,20 +13,14 @@ export class UserService implements IUserService {
 
     }
 
-    async Test(): Promise<boolean> {
-        return this.userRepository.Test();
-    }
-
 
     async FetchUser(token: string): Promise<User> {
         return this.userRepository.FetchUser(token);
     }
 
 
-
-
-    async CreateAccount(user: User): Promise<boolean> {
-        let result = await this.userRepository.CreateAccount(user);
+    async CreateAccount(account: Account): Promise<boolean> {
+        let result = await this.userRepository.CreateAccount(account);
         return result.success;
 
     }
@@ -91,7 +86,7 @@ export class UserService implements IUserService {
         if (!currentUser || !currentUser.id)
             throw new Error("User not logged in");
 
-        let user = await this.userRepository.GetUserAccount();
+        let user = await this.userRepository.GetUserInfo();
 
         return user;
     }

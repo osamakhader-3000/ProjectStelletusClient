@@ -54,6 +54,8 @@
     align-items: center;
 }
 
+
+
 .client {
     border-radius: 13px;
     padding: 1%;
@@ -64,24 +66,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     width: 50%;
-}
-
-.listbuttonclass {
-  background-color: white;
-  color: rgb(43, 54, 116);
-  border-radius: 90px;
-  border: 0px;
-  display: inline-block;
-   height: 40px;
-    width: 40px;
-    padding: 10px;
-
-}
-
-.listbuttonclass:hover {
-  background-color: rgb(024, 229, 242);
-  cursor: pointer;
-
 }
 
 .buttonscontainer {
@@ -176,8 +160,11 @@
   cursor: pointer;
   background-color: rgb(224, 229, 242);
   color: rgb(43, 54, 116);
-  margin: 0px 4px;
- 
+  margin: 0px 4px; 
+}
+
+.addbuildbuttonclass:hover {
+  background-color: rgb(024, 229, 242);
 }
 
 .maincontainer {
@@ -217,3 +204,49 @@
     padding: 8px;
     text-align: left;
   }
+
+  .clientHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+
+.actionButtons {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+}
+
+
+.listbuttonclass {
+  background-color: white;
+  color: rgb(43, 54, 116);
+  border-radius: 90px;
+  border: 0px;
+  display: inline-block;
+   height: 30px;
+    width: 30px;
+    padding: 0px;
+}
+
+
+.listbuttonclass:hover {
+  background-color: rgb(024, 229, 242);
+  cursor: pointer;
+
+}
+
+.editButton {width: 30px; height: 30px;}
+
+.buildName{
+    font-weight: 700;
+    font-family: "DM Sans", sans-serif;
+    color: black;
+}
+
+.buildHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}

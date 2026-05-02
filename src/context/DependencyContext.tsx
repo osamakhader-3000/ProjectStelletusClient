@@ -32,6 +32,7 @@ import { IBuildService } from '../Application/Interfaces/IBuildService.ts';
 import { IClientService } from '../Application/Interfaces/IClientService.ts';
 import { ClientService } from '../Application/Services/ClientService.ts';
 import { ClientRepository } from '../Data/Repositories/ClientRepository.ts';
+import { ClientApi } from '../Data/api/Implementation/ClientApi.ts';
 
 
 
@@ -66,9 +67,10 @@ const taskServ = new TaskService(taskRepo);
 
 const buildApi = new BuildApi();
 const buildRepo = new BuildRepository(buildApi, authService);
-const buildServ = new BuildService(buildRepo);
+const buildServ = new BuildService(buildRepo,userRepository);
 
-const clientRepo = new ClientRepository();
+const clientApi = new ClientApi();
+const clientRepo = new ClientRepository(clientApi, authService);
 const clientServ = new ClientService(clientRepo);
 
 const authListener = new AuthListener(authEventBus, userServ);

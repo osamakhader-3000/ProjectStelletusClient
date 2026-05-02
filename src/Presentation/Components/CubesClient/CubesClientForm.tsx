@@ -53,27 +53,24 @@ export function CubesClientForm({ client, editMode }: CubesClientFormProps) {
     async function addClient() {
         if (!validateClient()) return;
 
-        // create guid
-        var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
 
-        const newClient = new Client(guid, name.trim(), description.trim(), builds, currentChangeRequest.trim(), lastChangeRequest.trim());
+        const newClient = new Client(null, name.trim(), description.trim(), builds, currentChangeRequest.trim(), lastChangeRequest.trim());
 
         setIsSaving(true);
-        await clientService.createClient(newClient);
+        let success = await clientService.createClient(newClient);
         setIsSaving(false);
 
-        notificationHandlingBus.NotificationOccured('Client added successfully');
-        navigate('/clients');
+        if (success) {
+            notificationHandlingBus.NotificationOccured('Client added successfully');
+            navigate('/clients');
+        }
     }
 
     function toggleBuild(build: Build) {
         if (builds.some(b => b.id === build.id)) {
-            setBuilds(builds.filter(b => b.id !== build.id));
+            setBuilds(builds.filter(b => b.id !== build.id).map(b => new Build(b.id, '', '', [], null, null)));
         } else {
-            setBuilds([...builds, build]);
+            setBuilds([...builds, new Build(build.id, '', '', [], null, null)]);
         }
     }
 
@@ -88,10 +85,13 @@ export function CubesClientForm({ client, editMode }: CubesClientFormProps) {
         const updatedClient = new Client(client.id, name.trim(), description.trim(), builds, currentChangeRequest.trim(), lastChangeRequest.trim());
 
         setIsSaving(true);
-        await clientService.updateClient(updatedClient);
+        let success = await clientService.updateClient(updatedClient);
         setIsSaving(false);
 
-        notificationHandlingBus.NotificationOccured('Client updated successfully');
+        if (success) {
+            notificationHandlingBus.NotificationOccured('Client updated successfully');
+            navigate('/clients');
+        }
     }
 
     return (
@@ -116,13 +116,9 @@ export function CubesClientForm({ client, editMode }: CubesClientFormProps) {
                         {isLoadingBuilds && <p>Loading builds...</p>}
                         {!isLoadingBuilds && allBuilds.map(build => (
                             <div key={build.id} className={style.buildListItem}>
-                                <input
-                                    type="checkbox"
-                                    checked={builds.some(b => b.id === build.id)}
-                                    onChange={() => toggleBuild(build)}
-                                />
+                                <input type="checkbox" checked={builds.some(b => b.id === build.id)} onChange={() => toggleBuild(build)} />
                                 <span className={style.spanBuildVersion} onClick={() => toggleBuild(build)}>{build.version}</span>
-                                <span title={'open '+build.version}>
+                                <span title={'open ' + build.version}>
                                     <a href={`/editcubesbuild/${build.id}`} target="_blank" rel="noopener noreferrer">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="blue" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="blue" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />

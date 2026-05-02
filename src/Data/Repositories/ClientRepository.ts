@@ -1,47 +1,53 @@
 import { IClientRepository } from "../../Application/Repositories/IClientRepository";
 import Client from "../../Domain/Entities/Client";
+import { IClientApi } from "../api/Interfaces/IClientApi";
+import { IAuthService } from "../Commons/IAuthService";
+import { GeneralApiResult } from "../DataTransferObjects/GeneralApiResult";
 
 export class ClientRepository implements IClientRepository {
 
-        localStorageKey = "clients";
+    clientApi: IClientApi;
+    authService: IAuthService;
 
-        async getClient(clientId: string): Promise<Client> {
-            const clients = await this.listClients();
-            const client = clients.find(c => c.id === clientId);
-            if (client) {
-                return client;
-            }
-            throw new Error("Client not found");
-        }
+    constructor(clientApi: IClientApi, authService: IAuthService) {
+        this.clientApi = clientApi;
+        this.authService = authService;
+    }
 
-        async listClients(): Promise<Client[]> {
-            const clientsJson = localStorage.getItem(this.localStorageKey);
-            if (clientsJson) {
-                return JSON.parse(clientsJson) as Client[];
-            }
-            return [];
+    async getClient(clientId: string): Promise<Client> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<Client>>>(async () => {
+            return this.clientApi.getClient(clientId);
+        });
 
-        }
+        return result?.data ?? new Client('', '', '', [], '', '');
+    }
 
-        async updateClient(client: Client): Promise<void> {
-            var clients = await this.listClients();
-            const index = clients.findIndex(c => c.id === client.id);
-            if (index !== -1) {
-                clients[index] = client;
-                localStorage.setItem(this.localStorageKey, JSON.stringify(clients));
-            }
-        }
+    async updateClient(client: Client): Promise<boolean> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<boolean>>>(async () => {
+            return this.clientApi.updateClient(client);
+        });
+        return result?.success ?? false;
+    }
 
-        async deleteClient(clientId: string): Promise<void> {
-            var clients = await this.listClients();
-            clients = clients.filter(c => c.id !== clientId);
-            localStorage.setItem(this.localStorageKey, JSON.stringify(clients));
-        }
+    async deleteClient(clientId: string): Promise<boolean> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<boolean>>>(async () => {
+            return this.clientApi.deleteClient(clientId);
+        });
+        return result?.success ?? false;
+    }
 
-        async createClient(client: Client): Promise<void> {
-            var clients = await this.listClients();
-            clients.push(client);
-            localStorage.setItem(this.localStorageKey, JSON.stringify(clients));
-        }
+    async listClients(buildId?: string): Promise<Client[]> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<Client[]>>>(async () => {
+            return this.clientApi.listClients(buildId);
+        });
+        return result?.data ?? [];
+    }
+
+    async createClient(client: Client): Promise<boolean> {
+        let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<boolean>>>(async () => {
+            return this.clientApi.createClient(client);
+        });
+        return result?.success ?? false;
+    }
 
 }

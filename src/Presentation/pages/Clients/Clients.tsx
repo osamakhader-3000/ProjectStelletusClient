@@ -7,15 +7,21 @@ import { EditIconSvg } from "../../Components/GeneralComponents/EditIconSvg";
 import { DeleteIconSvg } from "../../Components/GeneralComponents/DeleteIconSvg";
 import { ButtonPreloader } from "../../Components/GeneralComponents/ButtonPreloader";
 import { UserRole } from "../../../Domain/Entities/User";
+import { ViewIconSvg } from "../../Components/GeneralComponents/ViewIconSvg";
+import { DeleteConfirmation } from "../../Components/GeneralComponents/DeleteConfirmation";
 
 export default function Clients() {
 
-    const { clientService, userService } = useContext(DependencyContext);
+    const { clientService, notificationHandlingBus, userService } = useContext(DependencyContext);
 
     const [clients, setClients] = useState<Client[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [deletingClientIds, setDeletingClientIds] = useState<Set<string>>(new Set());
     const [readonly, setReadonly] = useState(true);
+    const [clientId, setClientId] = useState<string | null>(null);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [deletePermission, setDeletePermission] = useState(true);
+
 
     useEffect(() => {
         const fetchClients = async () => {
@@ -24,17 +30,43 @@ export default function Clients() {
             setIsLoading(false);
 
             let currentUser = await userService.GetCurrentUser();
-            if (currentUser)
+            if (currentUser) {
                 setReadonly(currentUser.userRole !== UserRole.Administrator && currentUser.userRole !== UserRole.TechnicalSupport);
+                setDeletePermission(currentUser.userRole === UserRole.Administrator);
+            }
 
         };
         fetchClients();
     }, []);
 
-    const showDeleteConfirmation = (_ClientId: string | null) => {
+    const showDeleteConfirmation = (_clientId: string | null) => {
 
-        if (!_ClientId) return;
+        if (!_clientId) return;
 
+        setClientId(_clientId);
+        setShowConfirmation(true);
+    }
+
+    const deleteClientConfirmed = () => {
+        setShowConfirmation(false);
+        handleDeleteClient(clientId);
+    }
+
+
+    const handleDeleteClient = async (clientId: string | null) => {
+
+        if (!clientId) return;
+
+        setDeletingClientIds(prev => new Set(prev).add(clientId));
+        let result = await clientService.deleteClient(clientId);
+
+        if (result) {
+            notificationHandlingBus.NotificationOccured("Client deleted successfully");
+            var _clients = await clientService.listClients();
+            setClients(_clients);
+        }
+
+        setDeletingClientIds(prev => { const next = new Set(prev); next.delete(clientId!); return next; });
 
     }
 
@@ -47,7 +79,19 @@ export default function Clients() {
         );
 
     return (
+
+
+
         <div className={styles.maincontainer}>
+
+            {showConfirmation &&
+                <DeleteConfirmation
+                    title="Delete Client"
+                    message="Are you sure you want to delete this client?"
+                    onConfirm={deleteClientConfirmed}
+                    onCancel={() => setShowConfirmation(false)}
+                />
+            }
 
             <div className={styles.clientpagebuttonspanel}>
                 {!readonly &&
@@ -71,18 +115,26 @@ export default function Clients() {
                         <div className={styles.clientHeader}>
                             <span className={styles.clientName}>{client.name}</span>
                             <span className={styles.actionButtons}>
-                                <Link to={`/editcubesclient/${client.id}`} className={styles.editButton}>
+                                <Link to={`/viewcubesclient/${client.id}`} className={styles.viewButton} title="View">
                                     <button className={styles.listbuttonclass}>
-                                        <EditIconSvg />
+                                        <ViewIconSvg />
                                     </button>
                                 </Link>
-
                                 {!readonly &&
-                                    <button className={styles.listbuttonclass} onClick={() => showDeleteConfirmation(client.id)}>
-                                        {deletingClientIds.has(client.id!) ? <ButtonPreloader /> : (
-                                            <DeleteIconSvg />
-                                        )}
-                                    </button>
+                                    <>
+                                        <Link to={`/editcubesclient/${client.id}`} className={styles.editButton} title="Edit">
+                                            <button className={styles.listbuttonclass}>
+                                                <EditIconSvg />
+                                            </button>
+                                        </Link>
+
+                                        {deletePermission &&
+                                        <button className={styles.listbuttonclass} onClick={() => showDeleteConfirmation(client.id)} title="Delete">
+                                            {deletingClientIds.has(client.id!) ? <ButtonPreloader /> : (
+                                                <DeleteIconSvg />
+                                            )}
+                                        </button>}
+                                    </>
                                 }
                             </span>
                         </div>
@@ -94,11 +146,11 @@ export default function Clients() {
                                 </tr>
                                 <tr>
                                     <td className={styles.clientTitleCell}>Current Change Request:</td>
-                                    <td >{client.currentChangeRequest}</td>
+                                    <td>{client.currentChangeRequest}</td>
                                 </tr>
                                 <tr>
                                     <td className={styles.clientTitleCell}>Last Change Request:</td>
-                                    <td >{client.lastChangeRequest}</td>
+                                    <td>{client.lastChangeRequest}</td>
                                 </tr>
                             </tbody>
                         </table>

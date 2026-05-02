@@ -2,8 +2,8 @@ import Client from "../../Domain/Entities/Client";
 
 export interface IClientService {
     getClient(clientId: string): Promise<Client>;
-    listClients(): Promise<Client[]>;
-    updateClient(client: Client): Promise<void>;
-    deleteClient(clientId: string): Promise<void>;
-    createClient(client: Client): Promise<void>;
+    listClients(buildId?: string): Promise<Client[]>;
+    updateClient(client: Client): Promise<boolean>;
+    deleteClient(clientId: string): Promise<boolean>;
+    createClient(client: Client): Promise<boolean>;
 }

@@ -14,7 +14,7 @@ export default defineConfig({
         ws: true,
       },
       '/steletusapp': {
-        target: 'https://localhost:443',
+        target: 'https://localhost:7158',
         changeOrigin: true,
         secure: false,
         ws: true,

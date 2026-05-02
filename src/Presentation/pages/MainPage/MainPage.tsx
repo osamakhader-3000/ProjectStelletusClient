@@ -21,6 +21,7 @@ import Clients from '../Clients/Clients.tsx';
 import EditCubesClient from '../../Components/CubesClient/EditCubesClient.tsx';
 import AddCubesClient from '../../Components/CubesClient/AddCubesClient.tsx';
 import ViewCubesClient from '../../Components/CubesClient/ViewCubesClient.tsx';
+import ViewCubesBuild from '../../Components/CubesBuild/ViewCubesBuild.tsx';
 
 function MainPage() {
 
@@ -62,6 +63,7 @@ function MainPage() {
                               <Route path="/addtask" element={<AddTaskForm />} />
                               <Route path="/task/:id" element={<EditTaskForm />} />
                               <Route path="/viewcubesclient/:id" element={<ViewCubesClient />} />
+                              <Route path="/viewcubesbuild/:id" element={<ViewCubesBuild />} />
                               <Route element={<TechnicalSupportAccountRoute />}>
                                 <Route path="/addcubesbuild" element={<AddCubesBuild />} />
                                 <Route path="/editcubesbuild/:id" element={<EditCubesBuild />} />

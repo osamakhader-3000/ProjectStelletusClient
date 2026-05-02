@@ -3,6 +3,7 @@ import Build from "../../Domain/Entities/Build";
 import { IBuildApi } from "../api/Interfaces/IBuildApi";
 import { IAuthService } from "../Commons/IAuthService";
 import { GeneralApiResult } from "../DataTransferObjects/GeneralApiResult";
+import { BuildMapper } from "../Mappers/BuildMappers";
 
 export class BuildRepository implements IBuildRepository {
 
@@ -24,6 +25,8 @@ export class BuildRepository implements IBuildRepository {
 
     async updateBuild(build: Build): Promise<boolean> {
         let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<boolean>>>(async () => {
+            build.updatedAt = null;
+            build.updatedBy = null;
             return this.buildApi.updateBuild(build);
         });
         return result?.success ?? false;
@@ -40,16 +43,8 @@ export class BuildRepository implements IBuildRepository {
         let result = await this.authService.ProtectedAccess<Promise<GeneralApiResult<Build[]>>>(async () => {
             return this.buildApi.listBuilds();
         });
-        var b = result?.data ?? [];
 
-        for (let i = 0; i < b.length; i++) {
-            const element = b[i];
-            element.updatedAt = new Date();
-            element.updatedBy = "mohammad.almomani"
-        }
-
-        return b;
-
+        return BuildMapper.ToDomainList(result?.data ?? []);
     }
 
     async createBuild(build: Build): Promise<boolean> {

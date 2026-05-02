@@ -47,6 +47,10 @@
  
 }
 
+.addClientbuttonclass:hover {
+  background-color: rgb(024, 229, 242);
+}
+
 .clientcontainer {
     margin: 20px 0px;
     background-color: rgb(239, 244, 251);

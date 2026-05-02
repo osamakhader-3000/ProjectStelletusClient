@@ -1,7 +1,7 @@
 import ProfileImageMenu from './ProfileImageMenu';
 import styles from './MainViewHeader.module.css'
 import { useContext, useEffect, useState } from "react";
-import { User, UserAccountStatus, UserEmailVerificationStatus } from "../../Domain/Entities/User";
+import { User } from "../../Domain/Entities/User";
 import { DependencyContext } from '../../context/DependencyContext';
 
 export default function MainViewHeader(){
@@ -25,17 +25,9 @@ export default function MainViewHeader(){
 
     return (
     <div className={styles.mainviewheader}>
-      {currentUser && currentUser.emailVerificationStatus == UserEmailVerificationStatus.Verified && currentUser.accountStatus == UserAccountStatus.Active && (
-        <div className={styles.searchDiv}>
-          {/* 
-          <SearchBox
-            innerDivStyle={styles.innerDivStyle}
-            innerDivStyleActive={styles.innerDivStyleActive}
-            placeholder="Search tickets"
-          /> 
-          */}
-        </div>
-      )}
+      <div className={styles.searchDiv}>
+ 
+      </div>
       <div className={styles.profileButton}>
         {currentUser  && 
         <div className={styles.username}>{currentUser.username??currentUser.email}</div>

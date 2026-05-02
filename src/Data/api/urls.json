@@ -26,17 +26,23 @@
     "current-user":"api/auth/currentuser",
     "verify-email":"api/auth/verifyemailtoken",
     "resend-verification-email":"api/auth/resendverificationemail",
-    "get-user-account":"api/users/account",
+    "get-user-info":"api/users/getuserinfo",
     "change-password":"api/users/changepassword",
     "list-users":"api/users/list",
     "suspend-user":"api/users/suspend",
     "activate-user":"api/users/activate",
+    "list-users-by-ids":"api/users/listbyids",
     "build-create":"api/builds/create",
     "build-get":"api/builds/get",
     "build-update":"api/builds/update",
     "build-delete":"api/builds/delete",
     "build-list":"api/builds/list",
-    "change-user-role":"api/users/changerole"
+    "change-user-role":"api/users/changerole",
+    "client-create":"api/clients/create",
+    "client-get":"api/clients/get",
+    "client-update":"api/clients/update",
+    "client-delete":"api/clients/delete",
+    "client-list":"api/clients/list"
 
 
 }
